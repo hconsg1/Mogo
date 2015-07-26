@@ -14,26 +14,20 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.widget.FrameLayout;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.h.mogo.CameraPreview;
-import com.example.h.mogo.R;
-import com.parse.GetDataCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -60,41 +54,24 @@ public class MainActivity extends Activity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // Enable Local Datastore.
+        // set parse key and value config
         Parse.enableLocalDatastore(this);
-
         Parse.initialize(this, "Twc5KQkxtq0yenh2uHBp3GVwfqW48kwKIgLThZvM", "vLlrTC1DrowiyZJtzURRuSUpI64dOFvoBt1AqRIC");
 
+        Button button = (Button) findViewById(R.id.main_video_view_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MyVideoView.class);
+                startActivity(intent);
+            }
+        });
 
-//
-//
-//        byte[] data = "MOGO!".getBytes();
-//        ParseFile file = new ParseFile("first.txt", data);
-//        file.saveInBackground();
-//
-//        ParseObject obj = new ParseObject("FileUpload");
-//
-//        obj.put("user", file);
-//
-//        obj.saveInBackground();
-        // create Intent to take a picture and return control to the calling application
-        //create new Intent
-/*
-        Intent intent = new Intent("android.media.action.VIDEO_CAMERA");
 
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-        //path += "/myFolder/";
 
-        System.out.println(path);
-        File file = new File( path );
-        Uri outputFileUri = Uri.fromFile( file );
-
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1); // set the video image quality to high
-        // start the Video Capture Intent
-        startActivityForResult(intent, CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);*/
 
         dispatchTakeVideoIntent();
-    }
+    }//end of oncreate function
+
     private void dispatchTakeVideoIntent() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
