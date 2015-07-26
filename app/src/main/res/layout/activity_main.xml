@@ -10,4 +10,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtview1" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="click to watch video feed"
+        android:id="@+id/main_video_view_button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="197dp" />
+
 </RelativeLayout>
