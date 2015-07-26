@@ -20,7 +20,9 @@ import android.widget.Toast;
 
 import com.example.h.mogo.CameraPreview;
 import com.example.h.mogo.R;
+import com.parse.GetDataCallback;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
@@ -154,6 +156,19 @@ public class MainActivity extends Activity  {
             }
         }
     }
+/*
+    public void getVideofromParse(obj){
+        ParseFile applicantResume = (ParseFile)anotherApplication.get("applicantResumeFile");
+        applicantResume.getDataInBackground(new GetDataCallback() {
+            public void done(byte[] data, ParseException e) {
+                if (e == null) {
+                    // data has the bytes for the resume
+                } else {
+                    // something went wrong
+                }
+            }
+        });
+    }*/
 
     public static byte[] getBytesFromFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);
