@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.hardware.Camera;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -84,38 +87,58 @@ public class MainActivity extends Activity  {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         System.out.println("====================== START OF ON ACTRESULT  =======================");
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
-            // mVideoView.setVideoURI(videoUri);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
             try {
+                this.getLocation();
                 Uri androidUri = data.getData();
-                System.out.print(androidUri);
                 Uri auri = data.getData();
-                String path = auri.getPath();
-
-               // File filex = new File(new java.net.URI(URLEncoder.encode(auri.toString(), "UTF-8")));
                 File filex = new File(getRealPathFromURI(this, auri));
 
                 byte[] byteX = getBytesFromFile(filex);
-                ParseFile file = new ParseFile("firstV.mp4", byteX);
+                ParseFile file = new ParseFile("secondV.mp4", byteX);
                 file.saveInBackground();
                 TextView tv = (TextView)findViewById(R.id.txtview1);
-                tv.setText(androidUri.toString()+"??????"+filex.toString()+"////" +byteX.toString());
+                tv.setText(androidUri.toString() + "??????" + filex.toString() + "////" +byteX.toString());
 
                 ParseObject obj = new ParseObject("VideoUpload");
 
-                 obj.put("firstUpload", file);
+                obj.put("firstUpload", file);
 
                   obj.saveInBackground();
 
-                /*FileInputStream fis = new FileInputStream(file);
-                byte[] byteData = new byte[(int)file.length()];
-                DataInputStream dataIs = new DataInputStream(fis);*/
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.print("?????????????????????///11111111111111111111111/dfadsifc");
             }
         }
+    }
+
+    public void getLocation(){
+        final LocationManager locationManager=  (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        final LocationListener locationListener = new LocationListener(){
+            public void onLocationChanged(Location location) {
+                System.out.println("!!####$%%^!!!!!!!!!!!@@@@@@@@@@@@@@@");
+
+                location.getLatitude();
+                location.getLongitude();
+
+                String myLocation = "Latitude = " + location.getLatitude() + " Longitude = " + location.getLongitude();
+
+                //I make a log to see the results
+                Log.e("MY CURRENT LOCATION", myLocation);
+
+                System.out.print("!!!!!!!!!!!!!!!!!!!"+myLocation);
+                locationManager.removeUpdates(this);
+
+            }
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {}
+            @Override
+            public void onProviderEnabled(String s) {}
+            @Override
+            public void onProviderDisabled(String s) {}
+        };
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
