@@ -120,6 +120,7 @@ public class MainActivity extends Activity  {
                 String myLocation = "Latitude = " + location.getLatitude() + " Longitude = " + location.getLongitude();
                 //I make a log to see the results
                 Log.e("MY CURRENT LOCATION", myLocation);
+
             }
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {}
@@ -128,7 +129,11 @@ public class MainActivity extends Activity  {
             @Override
             public void onProviderDisabled(String s) {}
         };
-        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,  locationListener, null);
+        //locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
