@@ -22,11 +22,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -116,19 +114,12 @@ public class MainActivity extends Activity  {
         final LocationManager locationManager=  (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         final LocationListener locationListener = new LocationListener(){
             public void onLocationChanged(Location location) {
-                System.out.println("!!####$%%^!!!!!!!!!!!@@@@@@@@@@@@@@@");
-
+                System.out.println("=======================  starting on location changed ========================");
                 location.getLatitude();
                 location.getLongitude();
-
                 String myLocation = "Latitude = " + location.getLatitude() + " Longitude = " + location.getLongitude();
-
                 //I make a log to see the results
                 Log.e("MY CURRENT LOCATION", myLocation);
-
-                System.out.print("!!!!!!!!!!!!!!!!!!!"+myLocation);
-                locationManager.removeUpdates(this);
-
             }
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {}
@@ -137,8 +128,7 @@ public class MainActivity extends Activity  {
             @Override
             public void onProviderDisabled(String s) {}
         };
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-
+        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,  locationListener, null);
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
@@ -204,19 +194,7 @@ public class MainActivity extends Activity  {
         is.close();
         return bytes;
     }
-/*
-        if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // Video captured and saved to fileUri specified in the Intent
-                Toast.makeText(this, "Video saved to:\n" +
-                        data.getData(), Toast.LENGTH_LONG).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                // User cancelled the video capture
-            } else {
-                // Video capture failed, advise user
-            }
-        }
-    }*/
+
 
     /** Check if this device has a camera */
     private boolean checkCameraHardware(Context context) {
@@ -280,9 +258,4 @@ public class MainActivity extends Activity  {
         return mediaFile;
     }
 
-
-
-
-
-
-}
+}//end of main activity class
