@@ -19,8 +19,9 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.parse.Parse;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -53,6 +54,7 @@ public class MainActivity extends Activity  {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         // Enable Local Datastore.
         // set parse key and value config
@@ -72,6 +74,24 @@ public class MainActivity extends Activity  {
 
         dispatchTakeVideoIntent();
     }//end of oncreate function
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Logs 'app deactivate' App Event.
+        AppEventsLogger.deactivateApp(this);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Logs 'install' and 'app activate' App Events.
+        AppEventsLogger.activateApp(this);
+    }
+
 
     private void dispatchTakeVideoIntent() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -94,8 +114,6 @@ public class MainActivity extends Activity  {
                 byte[] byteX = getBytesFromFile(filex);
                 ParseFile file = new ParseFile("secondV.mp4", byteX);
                 file.saveInBackground();
-                TextView tv = (TextView)findViewById(R.id.txtview1);
-                tv.setText(androidUri.toString() + "??????" + filex.toString() + "////" +byteX.toString());
 
                 ParseObject obj = new ParseObject("VideoUpload");
 
@@ -129,10 +147,11 @@ public class MainActivity extends Activity  {
             @Override
             public void onProviderDisabled(String s) {}
         };
-        //locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
+        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
+        locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+//        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+//        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
     }
 
