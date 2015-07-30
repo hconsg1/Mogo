@@ -5,13 +5,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapView extends Activity implements OnMapReadyCallback {
 
-GoogleMap _map;
+    GoogleMap _map;
+    ArrayList<Marker> _visibleMarkers;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +24,15 @@ GoogleMap _map;
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.mapView);
         mapFragment.getMapAsync(this);
+        Button button= (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MapView.this, VideoList.class);
+                intent.putExtra("markerList",_visibleMarkers );
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -54,6 +67,7 @@ GoogleMap _map;
                 markerList.add(marker);
             }
         }
+        _visibleMarkers = markerList;
         return markerList;
 
 
@@ -67,7 +81,7 @@ GoogleMap _map;
     public ArrayList<Marker> setMarker(){
         //setMarkers , return Marker array
         LatLng loc1 = new LatLng(41.8262, -71.4034);
-        LatLng loc2 = new LatLng(41.8269, -71.4034);
+        LatLng loc2 = new LatLng(41.8258, -71.4078);
         Marker marker1 = _map.addMarker(new MarkerOptions()
                 .title("Sydney")
                 .snippet("The most populous city in Australia.")
