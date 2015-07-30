@@ -22,6 +22,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.parse.Parse;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -58,6 +61,7 @@ public class MainActivity extends Activity  {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         // Enable Local Datastore.
         // set parse key and value config
@@ -75,12 +79,13 @@ public class MainActivity extends Activity  {
                 Environment.DIRECTORY_PICTURES);
 
         Log.d("pth", path.getAbsolutePath());
-        startCamera();
+      //  startCamera();
 
 
 
    //     dispatchTakeVideoIntent();
     }//end of oncreate function
+
 
     private void startCamera(){
 
@@ -135,14 +140,6 @@ public class MainActivity extends Activity  {
     }
 
 
- /*   private void dispatchTakeVideoIntent() {
-        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
-        }
-    }
-*/
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         System.out.println("==================="+requestCode);
@@ -192,8 +189,6 @@ public class MainActivity extends Activity  {
                 byte[] byteX = getBytesFromFile(filex);
                 ParseFile file = new ParseFile("secondV.jpg", byteX);
                 file.saveInBackground();
-                TextView tv = (TextView)findViewById(R.id.txtview1);
-                tv.setText(androidUri.toString() + "??????" + filex.toString() + "////" +byteX.toString());
 
                 ParseObject obj = new ParseObject("VideoUpload");
 
@@ -232,9 +227,9 @@ public class MainActivity extends Activity  {
             @Override
             public void onProviderDisabled(String s) {}
         };
-        //locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
 
     }
 
