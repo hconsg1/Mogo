@@ -27,7 +27,7 @@ public class MyVideoView extends ActionBarActivity {
         ParseObject object = null;
         String myurl=null;
         try{
-            object = query.get("MXYTbgBWc3");
+            object = query.get("v2HfLXBU3i");
             ParseFile applicantResume = (ParseFile)object.get("firstUpload");
             System.out.println("++++++++++++"+applicantResume);
             try {

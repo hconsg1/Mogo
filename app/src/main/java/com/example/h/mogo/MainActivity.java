@@ -20,6 +20,7 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.Parse;
 import com.parse.ParseFile;
@@ -41,6 +42,8 @@ public class MainActivity extends Activity  {
     private SurfaceHolder holder;
     private CamcorderProfile camcorderProfile;
     private Camera camera;
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+
     private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
     static final int REQUEST_VIDEO_CAPTURE = 1;
     private Uri fileUri;
@@ -49,6 +52,8 @@ public class MainActivity extends Activity  {
     boolean recording = false;
     boolean usecamera = true;
     boolean previewRunning = false;
+    LocationManager locationManager;
+    Location gpsLocation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,43 +67,142 @@ public class MainActivity extends Activity  {
         Button button = (Button) findViewById(R.id.main_video_view_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MyVideoView.class);
+                Intent intent = new Intent(MainActivity.this, MapView.class);
                 startActivity(intent);
             }
         });
+        File path = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+
+        Log.d("pth", path.getAbsolutePath());
+        startCamera();
 
 
 
-
-        dispatchTakeVideoIntent();
+   //     dispatchTakeVideoIntent();
     }//end of oncreate function
 
-    private void dispatchTakeVideoIntent() {
+    private void startCamera(){
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);  // create a file to save the video
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);  // set the image file name
+
+     //   intent.putExtra(MediaStore.EXTRA__QUALITY, 1); // set the video image quality to high
+
+        // start the Video Capture Intent
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+    }
+
+    /** Create a file Uri for saving an image or video */
+    private static Uri getOutputMediaFileUri(int type){
+        return Uri.fromFile(getOutputMediaFile(type));
+    }
+
+    /** Create a File for saving an image or video */
+    private static File getOutputMediaFile(int type){
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+        Log.d("tag",Environment.getExternalStorageState());
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "MyCameraApp");
+        // This location works best if you want the created images to be shared
+        // between applications and persist after your app has been uninstalled.
+
+        // Create the storage directory if it does not exist
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                Log.d("MyCameraApp", "failed to create directory");
+                return null;
+            }
+        }
+        Log.e("tg", "==========================================");
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+        if (type == MEDIA_TYPE_IMAGE){
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "IMG_"+ timeStamp + ".jpg");
+        } else if(type == MEDIA_TYPE_VIDEO) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "VID_"+ timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+
+        return mediaFile;
+    }
+
+
+ /*   private void dispatchTakeVideoIntent() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
         }
     }
-
+*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        System.out.println("==================="+requestCode);
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            Log.d("tag","@22222222222222");
+            if (resultCode == RESULT_OK) {
+                // Image captured and saved to fileUri specified in the Intent
+                System.out.println(data);
+         //       Toast.makeText(this, "Image saved to:\n" +
+        //                data.getData(), Toast.LENGTH_LONG).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // User cancelled the image capture
+            } else {
+                // Image capture failed, advise user
+            }
+        }
+
+        if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // Video captured and saved to fileUri specified in the Intent
+                System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                System.out.println(data);
+               Toast.makeText(this, "Video saved to:\n" +
+                        data.getData(), Toast.LENGTH_LONG).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // User cancelled the video capture
+            } else {
+                // Video capture failed, advise user
+            }
+        }
+    }
+
+
+   // @Override
+   /* protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         System.out.println("====================== START OF ON ACTRESULT  =======================");
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             try {
+                locationManager =  (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                 this.getLocation();
+
                 Uri androidUri = data.getData();
                 Uri auri = data.getData();
                 File filex = new File(getRealPathFromURI(this, auri));
-
+                Log.d("tag", "@@@@@@@@@@@@@@@@@@@@@@@@@2");
+                System.out.println(filex);
                 byte[] byteX = getBytesFromFile(filex);
-                ParseFile file = new ParseFile("secondV.mp4", byteX);
+                ParseFile file = new ParseFile("secondV.jpg", byteX);
                 file.saveInBackground();
                 TextView tv = (TextView)findViewById(R.id.txtview1);
                 tv.setText(androidUri.toString() + "??????" + filex.toString() + "////" +byteX.toString());
 
                 ParseObject obj = new ParseObject("VideoUpload");
 
+                if (gpsLocation == null){
+                    gpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    Log.d("tag", gpsLocation.toString());
+                }
+
+                obj.put("location", gpsLocation.toString());
                 obj.put("firstUpload", file);
 
                   obj.saveInBackground();
@@ -109,14 +213,13 @@ public class MainActivity extends Activity  {
             }
         }
     }
-
+*/
     public void getLocation(){
-        final LocationManager locationManager=  (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+
         final LocationListener locationListener = new LocationListener(){
             public void onLocationChanged(Location location) {
                 System.out.println("=======================  starting on location changed ========================");
-                location.getLatitude();
-                location.getLongitude();
+                gpsLocation = location;
                 String myLocation = "Latitude = " + location.getLatitude() + " Longitude = " + location.getLongitude();
                 //I make a log to see the results
                 Log.e("MY CURRENT LOCATION", myLocation);
@@ -132,7 +235,6 @@ public class MainActivity extends Activity  {
         //locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
     }
 
@@ -151,19 +253,6 @@ public class MainActivity extends Activity  {
             }
         }
     }
-/*
-    public void getVideofromParse(obj){
-        ParseFile applicantResume = (ParseFile)anotherApplication.get("applicantResumeFile");
-        applicantResume.getDataInBackground(new GetDataCallback() {
-            public void done(byte[] data, ParseException e) {
-                if (e == null) {
-                    // data has the bytes for the resume
-                } else {
-                    // something went wrong
-                }
-            }
-        });
-    }*/
 
     public static byte[] getBytesFromFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);
@@ -200,67 +289,5 @@ public class MainActivity extends Activity  {
         return bytes;
     }
 
-
-    /** Check if this device has a camera */
-    private boolean checkCameraHardware(Context context) {
-        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
-            // this device has a camera
-            return true;
-        } else {
-            // no camera on this device
-            return false;
-        }
-    }
-
-    /** Create a file Uri for saving an image or video */
-    private static Uri getOutputMediaFileUri(int type){
-        return Uri.fromFile(getOutputMediaFile(type));
-    }
-
-    /** A safe way to get an instance of the Camera object. */
-    public static Camera getCameraInstance(){
-        Camera c = null;
-        try {
-            c = Camera.open(); // attempt to get a Camera instance
-        }
-        catch (Exception e){
-            // Camera is not available (in use or does not exist)
-        }
-        return c; // returns null if camera is unavailable
-    }
-
-    /** Create a File for saving an image or video */
-    private static File getOutputMediaFile(int type){
-        // To be safe, you should check that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
-
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "MyCameraApp");
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
-
-        // Create the storage directory if it does not exist
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
-                Log.d("MyCameraApp", "failed to create directory");
-                return null;
-            }
-        }
-
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mediaFile;
-        if (type == MEDIA_TYPE_IMAGE){
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "IMG_"+ timeStamp + ".jpg");
-        } else if(type == MEDIA_TYPE_VIDEO) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "VID_"+ timeStamp + ".mp4");
-        } else {
-            return null;
-        }
-
-        return mediaFile;
-    }
 
 }//end of main activity class
