@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.parse.Parse;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
 
 import java.io.File;
 import java.io.FileInputStream;

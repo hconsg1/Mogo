@@ -1,10 +1,12 @@
 package com.example.h.mogo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +25,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import org.json.JSONObject;
 
-public class LoginActivity extends Fragment {
+public class LoginActivity extends FragmentActivity {
 
     String fbUserImg;
     String fbUserFirstName;
@@ -37,6 +39,8 @@ public class LoginActivity extends Fragment {
 
 
     private CallbackManager mCallBackManager;
+    Activity ac = (Activity) this;
+
     private FacebookCallback<LoginResult> mCallBack=new FacebookCallback<LoginResult>() {
 
 
@@ -44,6 +48,7 @@ public class LoginActivity extends Fragment {
         public void onSuccess(LoginResult loginResult) {
 
             accessToken = loginResult.getAccessToken();
+
 
             GraphRequest request  = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
 
@@ -61,7 +66,7 @@ public class LoginActivity extends Fragment {
                     Log.e("Email", fbUserEmail);
                     Log.e("Gender", fbUserGender);
 
-                    SharedPreferences lUserDb = getActivity().getSharedPreferences("localUserDb", Context.MODE_PRIVATE);
+                    SharedPreferences lUserDb = ac.getSharedPreferences("localUserDb", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = lUserDb.edit();
 
                     editor.putString("firstName", fbUserFirstName);
@@ -88,14 +93,14 @@ public class LoginActivity extends Fragment {
 
                         if (fbUserImg != null) {
 
-                            SharedPreferences uFbData = getActivity().getSharedPreferences("UFD", Context.MODE_PRIVATE);
+                            SharedPreferences uFbData = ac.getSharedPreferences("UFD", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = uFbData.edit();
 
                             editor.putString("imgUrl", fbUserImg);
                             Log.e("Profile Image", fbUserImg);
                             editor.commit();
 
-                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            Intent intent = new Intent(ac, MainActivity.class);
                             startActivity(intent);
                         }
 
@@ -127,7 +132,7 @@ public class LoginActivity extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+        FacebookSdk.sdkInitialize(ac.getApplicationContext());
         mCallBackManager = CallbackManager.Factory.create();
 
         accessTokenTracker = new AccessTokenTracker() {
@@ -148,7 +153,13 @@ public class LoginActivity extends Fragment {
             Log.e("NEW ACCESS TOKEN:", "YOU FUCKED UP NIGGA");
         }
 
+        LoginButton fbLoginButton = (LoginButton) findViewById(R.id.faceook_login_button);
+        fbLoginButton.setReadPermissions("user_friends");
+        fbLoginButton.setReadPermissions("email");
+        fbLoginButton.registerCallback(mCallBackManager, mCallBack);
+
     }
+/*
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -171,6 +182,7 @@ public class LoginActivity extends Fragment {
 
         }
     }
+*/
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
