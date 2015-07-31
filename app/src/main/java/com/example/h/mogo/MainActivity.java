@@ -3,7 +3,6 @@ package com.example.h.mogo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.hardware.Camera;
 import android.location.Location;
@@ -19,15 +18,9 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.parse.Parse;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
 
 import java.io.File;
 import java.io.FileInputStream;
