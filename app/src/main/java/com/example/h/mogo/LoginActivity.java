@@ -1,126 +1,46 @@
 package com.example.h.mogo;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import org.json.JSONObject;
 
-public class LoginActivity extends FragmentActivity {
+//import android.support.v4.app.Fragment;
 
-    String fbUserImg;
-    String fbUserFirstName;
-    String fbUserFullName;
-    String fbUserGender;
-    String fbUserEmail;
+public class LoginActivity extends Fragment {
 
+    private AccessTokenTracker mTokenTracker;
     private ProfileTracker mProfileTracker;
-    AccessToken accessToken;
-    AccessTokenTracker accessTokenTracker;
-
-
-    private CallbackManager mCallBackManager;
-    Activity ac = (Activity) this;
-
-    private FacebookCallback<LoginResult> mCallBack=new FacebookCallback<LoginResult>() {
-
-
+    private CallbackManager mCallbackManager;
+    private FacebookCallback<LoginResult> mCallback = new FacebookCallback<LoginResult>(){
         @Override
-        public void onSuccess(LoginResult loginResult) {
+        public void onSuccess(LoginResult loginResult){
+            AccessToken accessToken = loginResult.getAccessToken();
+            Profile profile = Profile.getCurrentProfile();
+            //TODO use profile to get the info about user from facebook
 
-            accessToken = loginResult.getAccessToken();
-
-
-            GraphRequest request  = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
-
-                @Override
-                public void onCompleted(JSONObject object, GraphResponse response) {
-
-                    fbUserFirstName = object.optString("first_name");
-                    fbUserFullName = object.optString("name");
-                    fbUserEmail = object.optString("email");
-                    fbUserGender = object.optString("gender");
-
-                    Log.e("Full Details", object.toString());
-                    Log.e("First Name", fbUserFirstName);
-                    Log.e("Full Name", fbUserFullName);
-                    Log.e("Email", fbUserEmail);
-                    Log.e("Gender", fbUserGender);
-
-                    SharedPreferences lUserDb = ac.getSharedPreferences("localUserDb", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = lUserDb.edit();
-
-                    editor.putString("firstName", fbUserFirstName);
-                    editor.putString("fullName", fbUserFullName);
-                    editor.putString("email", fbUserEmail);
-                    editor.putString("gender", fbUserGender);
-
-                    editor.commit();
-
-                }
-            });  request.executeAsync();
-
-            Bundle parameters = new Bundle();
-            parameters.putString("", "id,name,email,gender,locale,picture.width(300)");
-            request.setParameters(parameters);
-
-            mProfileTracker = new ProfileTracker() {
-
-                @Override
-                protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
-                    if(profile2 != null) {
-                        fbUserImg = profile2.getProfilePictureUri(160, 160).toString();
-                        mProfileTracker.stopTracking();
-
-                        if (fbUserImg != null) {
-
-                            SharedPreferences uFbData = ac.getSharedPreferences("UFD", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = uFbData.edit();
-
-                            editor.putString("imgUrl", fbUserImg);
-                            Log.e("Profile Image", fbUserImg);
-                            editor.commit();
-
-                            Intent intent = new Intent(ac, MainActivity.class);
-                            startActivity(intent);
-                        }
-
-                    } else {
-
-                        Log.e("YOU", "FUCKED UP NIGGA, ITS NULL");
-                    }
-                }
-            };
-
-        }
-
-
-        @Override
-        public void onCancel() {
 
         }
 
         @Override
-        public void onError(FacebookException e) {
+        public void onCancel(){
+
+        }
+        @Override
+        public void onError(FacebookException e){
 
         }
     };
@@ -132,70 +52,60 @@ public class LoginActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(ac.getApplicationContext());
-        mCallBackManager = CallbackManager.Factory.create();
-
-        accessTokenTracker = new AccessTokenTracker() {
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+        mCallbackManager = CallbackManager.Factory.create();
+        mTokenTracker = new AccessTokenTracker() {
             @Override
-            protected void onCurrentAccessTokenChanged(
-                    AccessToken oldAccessToken,
-                    AccessToken currentAccessToken) {
-                // Set the access token using
-                // currentAccessToken when it's loaded or set.
+            protected void onCurrentAccessTokenChanged(AccessToken old_accessToken, AccessToken new_accessToken) {
+
             }
         };
 
-        if (accessToken != null) {
-            // If the access token is available already assign it.
-            accessToken = AccessToken.getCurrentAccessToken();
-            Log.e("NEW ACCESS TOKEN:", accessToken.getToken());
-        } else  {
-            Log.e("NEW ACCESS TOKEN:", "YOU FUCKED UP NIGGA");
-        }
+        mProfileTracker = new ProfileTracker() {
+            @Override
+            protected void onCurrentProfileChanged(Profile old_profile, Profile new_profile) {
 
-        LoginButton fbLoginButton = (LoginButton) findViewById(R.id.faceook_login_button);
-        fbLoginButton.setReadPermissions("user_friends");
-        fbLoginButton.setReadPermissions("email");
-        fbLoginButton.registerCallback(mCallBackManager, mCallBack);
+            }
+        };
 
-    }
-/*
+        mTokenTracker.startTracking();
+        mProfileTracker.startTracking();
+
+    }//end of on create
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         return inflater.inflate(R.layout.login_activity, container, false);
-
     }
 
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        LoginButton loginbutton = (LoginButton) view.findViewById(R.id.faceook_login_button);
+        loginbutton.setReadPermissions("user_friends");
+        loginbutton.setFragment(this);
+        loginbutton.registerCallback(mCallbackManager, mCallback);
 
-        LoginButton fbLoginButton = (LoginButton) view.findViewById(R.id.faceook_login_button);
-        fbLoginButton.setReadPermissions("user_friends");
-        fbLoginButton.setReadPermissions("email");
-        fbLoginButton.setFragment(this);
-        fbLoginButton.registerCallback(mCallBackManager, mCallBack);
-
-        if (savedInstanceState != null) {
-
-        }
     }
-*/
+
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        Profile profile = Profile.getCurrentProfile();
+
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        mCallBackManager.onActivityResult(requestCode, resultCode, data);
-
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -207,13 +117,15 @@ public class LoginActivity extends FragmentActivity {
     @Override
     public void onStop() {
         super.onStop();
+        mTokenTracker.stopTracking();
+        mProfileTracker.stopTracking();
 
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        accessTokenTracker.stopTracking();
+        mTokenTracker.stopTracking();
     }
 
 }
