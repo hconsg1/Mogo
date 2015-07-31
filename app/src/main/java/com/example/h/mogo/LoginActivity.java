@@ -1,11 +1,9 @@
 package com.example.h.mogo;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v4.app.FragmentActivity;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -20,11 +18,12 @@ import com.facebook.login.widget.LoginButton;
 
 //import android.support.v4.app.Fragment;
 
-public class LoginActivity extends Fragment {
+public class LoginActivity extends FragmentActivity {
 
     private AccessTokenTracker mTokenTracker;
     private ProfileTracker mProfileTracker;
     private CallbackManager mCallbackManager;
+    private Activity myactivity = this;
     private FacebookCallback<LoginResult> mCallback = new FacebookCallback<LoginResult>(){
         @Override
         public void onSuccess(LoginResult loginResult){
@@ -52,7 +51,8 @@ public class LoginActivity extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+        FacebookSdk.sdkInitialize(myactivity.getApplicationContext());
+        setContentView(R.layout.login_activity);
         mCallbackManager = CallbackManager.Factory.create();
         mTokenTracker = new AccessTokenTracker() {
             @Override
@@ -64,30 +64,32 @@ public class LoginActivity extends Fragment {
         mProfileTracker = new ProfileTracker() {
             @Override
             protected void onCurrentProfileChanged(Profile old_profile, Profile new_profile) {
-
+            //TODO: do something with the profile
             }
         };
 
+        LoginButton loginbutton = (LoginButton)findViewById(R.id.faceook_login_button);
+        loginbutton.setReadPermissions("user_friends");
+        loginbutton.registerCallback(mCallbackManager, mCallback);
         mTokenTracker.startTracking();
         mProfileTracker.startTracking();
 
     }//end of on create
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        return inflater.inflate(R.layout.login_activity, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState){
-        super.onViewCreated(view, savedInstanceState);
-        LoginButton loginbutton = (LoginButton) view.findViewById(R.id.faceook_login_button);
-        loginbutton.setReadPermissions("user_friends");
-        loginbutton.setFragment(this);
-        loginbutton.registerCallback(mCallbackManager, mCallback);
-
-    }
-
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+//        return inflater.inflate(R.layout.login_activity, container, false);
+//    }
+//
+//    @Override
+//    public void onViewCreated(View view, Bundle savedInstanceState){
+//        super.onViewCreated(view, savedInstanceState);
+//        LoginButton loginbutton = (LoginButton) view.findViewById(R.id.faceook_login_button);
+//        loginbutton.setReadPermissions("user_friends");
+//        loginbutton.setFragment(this);
+//        loginbutton.registerCallback(mCallbackManager, mCallback);
+//
+//    }
 
 
     @Override
@@ -99,6 +101,7 @@ public class LoginActivity extends Fragment {
     public void onResume(){
         super.onResume();
         Profile profile = Profile.getCurrentProfile();
+        //TODO: do something with the profile
 
     }
 
