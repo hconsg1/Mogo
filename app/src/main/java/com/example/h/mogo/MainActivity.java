@@ -79,6 +79,7 @@ public class MainActivity extends Activity  {
                 Environment.DIRECTORY_PICTURES);
 
         Log.d("pth", path.getAbsolutePath());
+        uploadVideo();
       //  startCamera();
 
 
@@ -170,6 +171,29 @@ public class MainActivity extends Activity  {
                 // Video capture failed, advise user
             }
         }
+    }
+
+    public void uploadVideo(){
+        File filex = new File("/sdcard/DCIM/Camera/VID_20150728_211002.mp4");
+        Log.d("tag", "@@@@@@@@@@@@@@@@@@@@@@@@@2");
+        System.out.println(filex);
+        try {
+            byte[] byteX = getBytesFromFile(filex);
+            ParseFile file = new ParseFile("secondV.mp4", byteX);
+            file.saveInBackground();
+
+            ParseObject obj = new ParseObject("VideoUploadX");
+
+
+//            obj.put("location", gpsLocation.toString());
+            obj.put("firstUpload", file);
+
+            obj.saveInBackground();
+        }catch (Exception e) {
+            e.printStackTrace();
+            System.out.print("?????????????????????///11111111111111111111111/");
+        }
+
     }
 
 

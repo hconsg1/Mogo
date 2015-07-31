@@ -17,10 +17,10 @@ public class VideoList extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.videolist_activity);
 
-        Bundle bundle = getIntent().getExtras();
+/*        Bundle bundle = getIntent().getExtras();
 
        ArrayList<Marker> visibleMarkers = (ArrayList<Marker>) bundle.get("markerList");
-        
+        */
     }
 
     @Override

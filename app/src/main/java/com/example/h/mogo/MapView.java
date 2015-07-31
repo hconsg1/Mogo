@@ -29,7 +29,7 @@ public class MapView extends Activity implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MapView.this, VideoList.class);
-                intent.putExtra("markerList",_visibleMarkers );
+              //  intent.putExtra("markerList",_visibleMarkers );
                 startActivity(intent);
             }
         });
