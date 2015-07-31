@@ -30,8 +30,9 @@ public class LoginActivity extends FragmentActivity {
             AccessToken accessToken = loginResult.getAccessToken();
             Profile profile = Profile.getCurrentProfile();
             //TODO use profile to get the info about user from facebook
-
-
+            //go to different activity
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
         }
 
         @Override
