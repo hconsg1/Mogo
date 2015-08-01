@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -22,39 +23,15 @@ public class LoginActivity extends FragmentActivity {
 
     private AccessTokenTracker mTokenTracker;
     private ProfileTracker mProfileTracker;
-    private CallbackManager mCallbackManager;
     private Activity myactivity = this;
-    private FacebookCallback<LoginResult> mCallback = new FacebookCallback<LoginResult>(){
-        @Override
-        public void onSuccess(LoginResult loginResult){
-            AccessToken accessToken = loginResult.getAccessToken();
-            Profile profile = Profile.getCurrentProfile();
-            //TODO use profile to get the info about user from facebook
-            //go to different activity
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-        }
-
-        @Override
-        public void onCancel(){
-
-        }
-        @Override
-        public void onError(FacebookException e){
-
-        }
-    };
-
-    public LoginActivity() {
-        // Required empty public constructor
-    }
+    private CallbackManager callbackManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(myactivity.getApplicationContext());
         setContentView(R.layout.login_activity);
-        mCallbackManager = CallbackManager.Factory.create();
+        callbackManager = CallbackManager.Factory.create();
         mTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken old_accessToken, AccessToken new_accessToken) {
@@ -68,14 +45,34 @@ public class LoginActivity extends FragmentActivity {
             //TODO: do something with the profile
             }
         };
-
+        Log.d("tag", "===============================================");
         LoginButton loginbutton = (LoginButton)findViewById(R.id.faceook_login_button);
         loginbutton.setReadPermissions("user_friends");
-        loginbutton.registerCallback(mCallbackManager, mCallback);
+        loginbutton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // App code
+                System.out.println("+++++++++++++++++++++++success++++++++++++");
+                Intent intent = new Intent(LoginActivity.this, MapView.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+                Log.e("er","=======================FB ERROR");
+            }
+        });
         mTokenTracker.startTracking();
         mProfileTracker.startTracking();
 
     }//end of on create
+
 
 //    @Override
 //    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -102,6 +99,9 @@ public class LoginActivity extends FragmentActivity {
     public void onResume(){
         super.onResume();
         Profile profile = Profile.getCurrentProfile();
+        Log.d("tag", "=========================on Resume");
+        Intent intent = new Intent(LoginActivity.this, MapView.class);
+        startActivity(intent);
         //TODO: do something with the profile
 
     }
@@ -109,17 +109,19 @@ public class LoginActivity extends FragmentActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        Log.d("tag", "=========================onActivtyResult");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
+        Log.d("tag", "=========================on Start");
     }
 
     @Override
     public void onStop() {
+        Log.d("tag","=========================on Stop");
         super.onStop();
         mTokenTracker.stopTracking();
         mProfileTracker.stopTracking();
@@ -129,6 +131,7 @@ public class LoginActivity extends FragmentActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("tag", "=========================on Destroy");
         mTokenTracker.stopTracking();
     }
 

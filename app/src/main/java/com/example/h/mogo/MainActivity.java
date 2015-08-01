@@ -74,7 +74,7 @@ public class MainActivity extends Activity  {
                 Environment.DIRECTORY_PICTURES);
 
         Log.d("pth", path.getAbsolutePath());
-        uploadVideo();
+       // uploadVideo();
       //  startCamera();
 
 
@@ -95,6 +95,7 @@ public class MainActivity extends Activity  {
         // start the Video Capture Intent
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
+
 
     /** Create a file Uri for saving an image or video */
     private static Uri getOutputMediaFileUri(int type){
