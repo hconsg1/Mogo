@@ -201,7 +201,7 @@ public class MainActivity extends Activity  {
     }
 
     public String long_lat_info_to_grid_info(double longitude, double latitude){
-        String grid_index = '';
+        String grid_index = "";
         //TODO: THIS IS THE MOST IMPORTANT ALGORITHM PART WHERE WE TRANSLATE LONG/ LAT INFO TO GRID LOCATION IN DB
         //HARD CODED FOR NOW
         grid_index = "11_11";
@@ -215,7 +215,7 @@ public class MainActivity extends Activity  {
         longitude = 11.0;
         latitude = 11.0;
         String grid_index = long_lat_info_to_grid_info(longitude, latitude);
-        
+
         File filex = new File("/sdcard/DCIM/Camera/VID_20150728_211002.mp4");
         Log.d("tag", "@@@@@@@@@@@@@@@@@@@@@@@@@2");
         System.out.println(filex);
@@ -292,7 +292,8 @@ public class MainActivity extends Activity  {
             public void onProviderDisabled(String s) {}
         };
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationistener);
+        //important!
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationistener);
 
 
     }
