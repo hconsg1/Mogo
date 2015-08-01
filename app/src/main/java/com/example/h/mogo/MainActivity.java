@@ -41,7 +41,7 @@ public class MainActivity extends Activity  {
     private CamcorderProfile camcorderProfile;
     private Camera camera;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-
+    private String myLocation;
     private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
     static final int REQUEST_VIDEO_CAPTURE = 1;
     private Uri fileUri;
@@ -63,6 +63,8 @@ public class MainActivity extends Activity  {
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, "Twc5KQkxtq0yenh2uHBp3GVwfqW48kwKIgLThZvM", "vLlrTC1DrowiyZJtzURRuSUpI64dOFvoBt1AqRIC");
 
+        //start updating current location
+        getLocation();
         Button button = (Button) findViewById(R.id.main_video_view_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -81,6 +83,27 @@ public class MainActivity extends Activity  {
 
    //     dispatchTakeVideoIntent();
     }//end of oncreate function
+
+//TODO: 현창아 우리 계속 location update하려면 나중에 이코드도 있어야함
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        stopLocationUpdates();
+//    }
+//
+//    protected void stopLocationUpdates() {
+//        LocationServices.FusedLocationApi.removeLocationUpdates(
+//                mGoogleApiClient, this);
+//    }
+//
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if (mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
+//            startLocationUpdates();
+//        }
+//    }
+
 
 
     private void startCamera(){
@@ -161,6 +184,14 @@ public class MainActivity extends Activity  {
                 System.out.println(data);
                Toast.makeText(this, "Video saved to:\n" +
                         data.getData(), Toast.LENGTH_LONG).show();
+                //TODO: video was captured successfully, get the location and upload file here
+                if(gpsLocation != null){
+                    //TODO: we at least have the last location
+                    uploadVideo(gpsLocation);
+                }else{
+                    //TODO:GSP location is null we fucked
+                }
+
             } else if (resultCode == RESULT_CANCELED) {
                 // User cancelled the video capture
             } else {
@@ -169,7 +200,22 @@ public class MainActivity extends Activity  {
         }
     }
 
-    public void uploadVideo(){
+    public String long_lat_info_to_grid_info(double longitude, double latitude){
+        String grid_index = '';
+        //TODO: THIS IS THE MOST IMPORTANT ALGORITHM PART WHERE WE TRANSLATE LONG/ LAT INFO TO GRID LOCATION IN DB
+        //HARD CODED FOR NOW
+        grid_index = "11_11";
+        return grid_index;
+    }
+
+    public void uploadVideo(Location mylocation){
+
+        Double longitude = mylocation.getLatitude();
+        Double latitude = mylocation.getLatitude();
+        longitude = 11.0;
+        latitude = 11.0;
+        String grid_index = long_lat_info_to_grid_info(longitude, latitude);
+        
         File filex = new File("/sdcard/DCIM/Camera/VID_20150728_211002.mp4");
         Log.d("tag", "@@@@@@@@@@@@@@@@@@@@@@@@@2");
         System.out.println(filex);
@@ -180,11 +226,10 @@ public class MainActivity extends Activity  {
 
             ParseObject obj = new ParseObject("VideoUploadX");
 
-
-//            obj.put("location", gpsLocation.toString());
             obj.put("firstUpload", file);
-
+            obj.put("grid_index", grid_index);
             obj.saveInBackground();
+
         }catch (Exception e) {
             e.printStackTrace();
             System.out.print("?????????????????????///11111111111111111111111/");
@@ -235,7 +280,6 @@ public class MainActivity extends Activity  {
             public void onLocationChanged(Location location) {
                 System.out.println("=======================  starting on location changed ========================");
                 gpsLocation = location;
-                String myLocation = "Latitude = " + location.getLatitude() + " Longitude = " + location.getLongitude();
                 //I make a log to see the results
                 Log.e("MY CURRENT LOCATION", myLocation);
 
@@ -248,7 +292,7 @@ public class MainActivity extends Activity  {
             public void onProviderDisabled(String s) {}
         };
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationistener);
 
 
     }
