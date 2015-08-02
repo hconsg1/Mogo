@@ -16,10 +16,17 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.VisibleRegion;
 import com.parse.Parse;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -29,9 +36,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
-public class MainActivity extends Activity  {
+public class MainActivity extends Activity implements OnMapReadyCallback {
 
     public static final String LOGTAG = "VIDEOCAPTURE";
     public static final int MEDIA_TYPE_IMAGE = 1;
@@ -44,8 +52,10 @@ public class MainActivity extends Activity  {
     private String myLocation;
     private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
     static final int REQUEST_VIDEO_CAPTURE = 1;
+    private LocationListener locationListener;
     private Uri fileUri;
-    private Camera mCamera;
+    GoogleMap main_activity_map;
+    ArrayList<Marker> mapMarkers;
     private CameraPreview mPreview;
     boolean recording = false;
     boolean usecamera = true;
@@ -56,64 +66,74 @@ public class MainActivity extends Activity  {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         setContentView(R.layout.activity_main);
+
         // Enable Local Datastore.
         // set parse key and value config
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, "Twc5KQkxtq0yenh2uHBp3GVwfqW48kwKIgLThZvM", "vLlrTC1DrowiyZJtzURRuSUpI64dOFvoBt1AqRIC");
 
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.main_activity_map);
+        mapFragment.getMapAsync(this);
+
+
         //start updating current location
         getLocation();
-        Button button = (Button) findViewById(R.id.main_video_view_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MapView.class);
-                startActivity(intent);
-            }
-        });
+
+
+        //TODO: THIS BUTTON SHOULD BE THE MAP ITSELF : WHEN USER DRAGS OVER MAP THEN NEW ACTIVITY BY EXPANSION
+//        Button button = (Button) findViewById(R.id.main_video_view_button);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this, MapView.class);
+//                startActivity(intent);
+//            }
+//        });
+
+
         File path = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
 
         Log.d("pth", path.getAbsolutePath());
-       // uploadVideo();
-      //  startCamera();
 
 
+        // uploadVideo();
+        //  startCamera();
+        //     dispatchTakeVideoIntent();
 
-   //     dispatchTakeVideoIntent();
+
     }//end of oncreate function
 
-//TODO: 현창아 우리 계속 location update하려면 나중에 이코드도 있어야함
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        stopLocationUpdates();
-//    }
-//
-//    protected void stopLocationUpdates() {
-//        LocationServices.FusedLocationApi.removeLocationUpdates(
-//                mGoogleApiClient, this);
-//    }
-//
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        if (mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
-//            startLocationUpdates();
-//        }
-//    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+    protected void stopLocationUpdates() {
+        locationManager.removeUpdates(locationListener);
+        locationListener = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getLocation();
+    }
 
 
 
     private void startCamera(){
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
         fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);  // create a file to save the video
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);  // set the image file name
 
-     //   intent.putExtra(MediaStore.EXTRA__QUALITY, 1); // set the video image quality to high
+        //intent.putExtra(MediaStore.EXTRA__QUALITY, 1); // set the video image quality to high
 
         // start the Video Capture Intent
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
@@ -142,7 +162,6 @@ public class MainActivity extends Activity  {
                 return null;
             }
         }
-        Log.e("tg", "==========================================");
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile;
@@ -162,9 +181,9 @@ public class MainActivity extends Activity  {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        System.out.println("==================="+requestCode);
+
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            Log.d("tag","@22222222222222");
+
             if (resultCode == RESULT_OK) {
                 // Image captured and saved to fileUri specified in the Intent
                 System.out.println(data);
@@ -180,7 +199,6 @@ public class MainActivity extends Activity  {
         if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // Video captured and saved to fileUri specified in the Intent
-                System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 System.out.println(data);
                Toast.makeText(this, "Video saved to:\n" +
                         data.getData(), Toast.LENGTH_LONG).show();
@@ -217,7 +235,6 @@ public class MainActivity extends Activity  {
         String grid_index = long_lat_info_to_grid_info(longitude, latitude);
 
         File filex = new File("/sdcard/DCIM/Camera/VID_20150728_211002.mp4");
-        Log.d("tag", "@@@@@@@@@@@@@@@@@@@@@@@@@2");
         System.out.println(filex);
         try {
             byte[] byteX = getBytesFromFile(filex);
@@ -232,58 +249,23 @@ public class MainActivity extends Activity  {
 
         }catch (Exception e) {
             e.printStackTrace();
-            System.out.print("?????????????????????///11111111111111111111111/");
+            System.out.print("======error in file upload function in main activity ===============");
         }
 
     }
 
 
-   // @Override
-   /* protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        System.out.println("====================== START OF ON ACTRESULT  =======================");
-        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
-            try {
-                locationManager =  (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-                this.getLocation();
-
-                Uri androidUri = data.getData();
-                Uri auri = data.getData();
-                File filex = new File(getRealPathFromURI(this, auri));
-                Log.d("tag", "@@@@@@@@@@@@@@@@@@@@@@@@@2");
-                System.out.println(filex);
-                byte[] byteX = getBytesFromFile(filex);
-                ParseFile file = new ParseFile("secondV.jpg", byteX);
-                file.saveInBackground();
-
-                ParseObject obj = new ParseObject("VideoUpload");
-
-                if (gpsLocation == null){
-                    gpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    Log.d("tag", gpsLocation.toString());
-                }
-
-                obj.put("location", gpsLocation.toString());
-                obj.put("firstUpload", file);
-
-                  obj.saveInBackground();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.print("?????????????????????///11111111111111111111111/dfadsifc");
-            }
-        }
-    }
-*/
     public void getLocation(){
+        locationListener = new LocationListener(){
 
-        final LocationListener locationListener = new LocationListener(){
+            @Override
             public void onLocationChanged(Location location) {
                 System.out.println("=======================  starting on location changed ========================");
                 gpsLocation = location;
                 //I make a log to see the results
                 Log.e("MY CURRENT LOCATION", myLocation);
-
             }
+
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {}
             @Override
@@ -291,11 +273,11 @@ public class MainActivity extends Activity  {
             @Override
             public void onProviderDisabled(String s) {}
         };
+        //TODO: NULL POINTER EXCEPTION
+        //WHERE IS LOCATION MANAGER BEING INSTANTIATED??
 
-        //important!
-        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationistener);
 
-
+        locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
@@ -347,6 +329,68 @@ public class MainActivity extends Activity  {
         // Close the input stream and return bytes
         is.close();
         return bytes;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        main_activity_map = map;
+        final ArrayList<Marker> markerArray = setMarker();
+        LatLng currentLoc = new LatLng(41.8262, -71.4032);
+        ArrayList<Marker> boundedList = getBoundedMarkers(markerArray);
+
+        main_activity_map.setMyLocationEnabled(true);
+        main_activity_map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 13));
+        main_activity_map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                Log.d("m","=====================camera move=====================");
+                System.out.println(getBoundedMarkers(markerArray));
+            }
+        });
+
+        Log.d("tag","=============map ready==============");
+        System.out.println(boundedList);
+    }
+
+    public ArrayList<Marker> getBoundedMarkers(ArrayList<Marker> markerArray){
+        ArrayList<Marker> markerList = new ArrayList<>();
+        for (Marker marker : markerArray){
+            if (isVisibleOnMap(marker.getPosition())){
+                markerList.add(marker);
+            }
+        }
+        mapMarkers = markerList;
+        return markerList;
+
+
+    }
+
+    public boolean isVisibleOnMap(LatLng latLng) {
+        VisibleRegion vr = main_activity_map.getProjection().getVisibleRegion();
+        return vr.latLngBounds.contains(latLng);
+    }
+
+    public ArrayList<Marker> setMarker(){
+        //setMarkers , return Marker array
+
+        LatLng loc1 = new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
+        Marker marker1 = main_activity_map.addMarker(new MarkerOptions()
+                .title("my current location")
+                .snippet("click this button to show all videos around you!")
+                .position(loc1));
+
+        main_activity_map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Intent intent = new Intent(MainActivity.this, MyVideoView.class);
+                startActivity(intent);
+                return false;
+            }
+        });
+
+        ArrayList<Marker> markerList = new ArrayList<Marker>();
+        markerList.add(marker1);
+        return markerList;
     }
 
 

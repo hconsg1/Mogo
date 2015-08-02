@@ -45,15 +45,15 @@ public class LoginActivity extends FragmentActivity {
             //TODO: do something with the profile
             }
         };
-        Log.d("tag", "===============================================");
+
         LoginButton loginbutton = (LoginButton)findViewById(R.id.faceook_login_button);
         loginbutton.setReadPermissions("user_friends");
         loginbutton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
-                System.out.println("+++++++++++++++++++++++success++++++++++++");
-                Intent intent = new Intent(LoginActivity.this, MapView.class);
+                System.out.println("===================FACEBOOK LOGIN SUCCESSS ===========================================");
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
             }
 
@@ -65,7 +65,7 @@ public class LoginActivity extends FragmentActivity {
             @Override
             public void onError(FacebookException exception) {
                 // App code
-                Log.e("er","=======================FB ERROR");
+                Log.e("er","=======================Facebook LOGIN  ERROR ===================================");
             }
         });
         mTokenTracker.startTracking();
@@ -99,8 +99,8 @@ public class LoginActivity extends FragmentActivity {
     public void onResume(){
         super.onResume();
         Profile profile = Profile.getCurrentProfile();
-        Log.d("tag", "=========================on Resume");
-        Intent intent = new Intent(LoginActivity.this, MapView.class);
+        Log.d("tag", "=========================on Resume FROM LOGIN =================================================");
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         //TODO: do something with the profile
 
@@ -110,18 +110,18 @@ public class LoginActivity extends FragmentActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
-        Log.d("tag", "=========================onActivtyResult");
+        Log.d("tag", "=========================onActivtyResult FROM LOGIN ACTITIVY ================================");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("tag", "=========================on Start");
+        Log.d("tag", "=========================on Start FROM LOGIN ===========================================");
     }
 
     @Override
     public void onStop() {
-        Log.d("tag","=========================on Stop");
+        Log.d("tag","=========================on Stop FROM LOGIN ====================================================");
         super.onStop();
         mTokenTracker.stopTracking();
         mProfileTracker.stopTracking();
