@@ -23,15 +23,29 @@
         <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="fill_parent" android:background="#FFFFFF">
             <LinearLayout android:id="@+id/contentVideo1" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingTop="15px" android:background="#FFFFFF">
                <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="#FFFFFF">
-                    <VideoView android:id="@+id/VideoView" android:layout_width="match_parent" android:layout_height="200dip" />
+                    <VideoView android:id="@+id/VideoView1" android:layout_width="match_parent" android:layout_height="200dip" />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout android:id="@+id/contentVideo2" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingTop="15px" android:background="#FFFFFF">
                 <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="#FFFFFF">
-                    <VideoView android:id="@+id/VideoView1" android:layout_width="match_parent" android:layout_height="200dip" />
+                    <VideoView android:id="@+id/VideoView2" android:layout_width="match_parent" android:layout_height="200dip" />
                 </LinearLayout>
             </LinearLayout>
+
+            <LinearLayout android:id="@+id/contentVideo3" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingTop="15px" android:background="#FFFFFF">
+                <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="#FFFFFF">
+                    <VideoView android:id="@+id/VideoView3" android:layout_width="match_parent" android:layout_height="200dip" />
+                </LinearLayout>
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
-    
+    <RelativeLayout android:layout_width="fill_parent"
+        android:layout_height="fill_parent" android:gravity="bottom">
+
+        <Button android:id="@+id/main_activity_start_camera"   android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:text="Camera button" />
+
+    </RelativeLayout>
+
 </RelativeLayout>

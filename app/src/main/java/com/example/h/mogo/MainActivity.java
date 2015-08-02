@@ -16,6 +16,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.SurfaceHolder;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,17 +27,21 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends Activity implements OnMapReadyCallback {
 
@@ -60,6 +66,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     boolean previewRunning = false;
     LocationManager locationManager;
     Location gpsLocation;
+    private String current_grid_location;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,17 +86,15 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
 
 
-        //start updating current location
-
 
         //TODO: THIS BUTTON SHOULD BE THE MAP ITSELF : WHEN USER DRAGS OVER MAP THEN NEW ACTIVITY BY EXPANSION
-//        Button button = (Button) findViewById(R.id.main_video_view_button);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this, MapView.class);
-//                startActivity(intent);
-//            }
-//        });
+        Button button = (Button) findViewById(R.id.main_activity_start_camera);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                //TODO: start camera preview activity NEEDS TO BE CHANGED
+                startCamera();
+            }
+        });
 
 
         File path = Environment.getExternalStoragePublicDirectory(
@@ -98,18 +103,52 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         Log.d("pth", path.getAbsolutePath());
 
 
-    //    uploadVideo();
-        //  startCamera();
-        //     dispatchTakeVideoIntent();
+        //uploadVideo();
+        //startCamera();
+        //dispatchTakeVideoIntent();
 
 
-    }//end of oncreate function
+    }//end of oncreate function of main activity
+
+    public void get_new_video_feed(String grid_info){
+        System.out.println("=======================  starting get new video feed function ============================");
+        //TODO: delete everything in the scroll view
+
+
+        //TODO: get all the video with the same grid index from parse and set the url of the videos to each of them
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("VideoUploadX");
+        query.whereEqualTo("grid_index", grid_info);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> scoreList, ParseException e) {
+                if (e == null) {
+                    //TODO: SUCCESS
+
+                } else {
+                    //TODO :ERROR
+
+                }
+            }
+        });
+    }
+
+    public boolean need_new_video_feed(){
+        if (gpsLocation == null) {
+            gpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+        Double current_long = gpsLocation.getLongitude();
+        Double current_lat = gpsLocation.getLatitude();
+        String new_grid = long_lat_info_to_grid_info(current_long, current_lat);
+        if(current_grid_location == new_grid){
+            return false;
+        }else{
+            return true;
+        }
+    }
 
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("main", "=========================on Pause=================");
         stopLocationUpdates();
     }
 
@@ -122,18 +161,19 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
         getLocation();
+        if(need_new_video_feed() == true){
+            String current_grid_index = long_lat_info_to_grid_info(gpsLocation.getLongitude(), gpsLocation.getLatitude());
+            get_new_video_feed(current_grid_index);
+        }
     }
 
 
 
     private void startCamera(){
-
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);  // create a file to save the video
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);  // set the image file name
-
-        //intent.putExtra(MediaStore.EXTRA__QUALITY, 1); // set the video image quality to high
-
+        //intent.putExtra(MediaStore.EXTRA__QUALITY, 1); // set the video image quality to hig
         // start the Video Capture Intent
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
@@ -180,9 +220,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-
             if (resultCode == RESULT_OK) {
                 // Image captured and saved to fileUri specified in the Intent
                 System.out.println(data);
@@ -218,19 +256,21 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     }
 
     public String long_lat_info_to_grid_info(double longitude, double latitude){
-        String grid_index = "";
+        String grid_index;
         //TODO: THIS IS THE MOST IMPORTANT ALGORITHM PART WHERE WE TRANSLATE LONG/ LAT INFO TO GRID LOCATION IN DB
         //HARD CODED FOR NOW
-        grid_index = "11_11";
+        int x_grid = (int)(longitude* 1000);
+        int y_grid = (int)(latitude* 1000);
+        grid_index  = Integer.toString(x_grid) + '_' + Integer.toString(y_grid);
         return grid_index;
     }
 
-
+    //TODO: this funcion needs to be called in camera view activity not here
     public void uploadVideo(){
         if (gpsLocation==null){
             gpsLocation=locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
-        Double longitude = gpsLocation.getLatitude();
+        Double longitude = gpsLocation.getLongitude();
         Double latitude = gpsLocation.getLatitude();
 
         String grid_index = long_lat_info_to_grid_info(longitude, latitude);
@@ -252,7 +292,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
             e.printStackTrace();
             System.out.print("======error in file upload function in main activity ===============");
         }
-
     }
 
 
@@ -265,6 +304,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                 gpsLocation = location;
                 //I make a log to see the results
                 Log.e("MY CURRENT LOCATION", gpsLocation.toString());
+                current_grid_location = long_lat_info_to_grid_info(gpsLocation.getLongitude(), gpsLocation.getLatitude());
             }
 
             @Override
@@ -276,6 +316,11 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         };
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, locationListener);
+        if (gpsLocation == null) {
+            gpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            current_grid_location = long_lat_info_to_grid_info(gpsLocation.getLongitude(), gpsLocation.getLatitude());
+        }
+
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
@@ -334,14 +379,11 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         main_activity_map = map;
         //final ArrayList<Marker> markerArray = setMarker();
         //ArrayList<Marker> boundedList = getBoundedMarkers(markerArray);
-
-        if (gpsLocation == null) {
-            gpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            Log.d("tag","=============changed to ========================");
-            Log.d("tag",gpsLocation.toString());
-        }
-
-        LatLng currentLoc = new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
+        double mylong = gpsLocation.getLongitude();
+        double mylat = gpsLocation.getLatitude();
+        LatLng currentLoc = new LatLng(mylong, mylat);
+        String grid_location = long_lat_info_to_grid_info(mylong, mylat);
+        get_new_video_feed(grid_location);
 
         main_activity_map.setMyLocationEnabled(true);
         main_activity_map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 13));
