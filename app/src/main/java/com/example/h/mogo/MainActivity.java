@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -100,7 +101,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         Log.d("pth", path.getAbsolutePath());
 
 
-        // uploadVideo();
+    //    uploadVideo();
         //  startCamera();
         //     dispatchTakeVideoIntent();
 
@@ -111,6 +112,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d("main", "=========================on Pause=================");
         stopLocationUpdates();
     }
 
@@ -205,7 +207,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                 //TODO: video was captured successfully, get the location and upload file here
                 if(gpsLocation != null){
                     //TODO: we at least have the last location
-                    uploadVideo(gpsLocation);
+                    uploadVideo();
                 }else{
                     //TODO:GSP location is null we fucked
                 }
@@ -226,12 +228,15 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         return grid_index;
     }
 
-    public void uploadVideo(Location mylocation){
 
-        Double longitude = mylocation.getLatitude();
-        Double latitude = mylocation.getLatitude();
-        longitude = 11.0;
-        latitude = 11.0;
+    public void uploadVideo(){
+        if (gpsLocation==null){
+
+            gpsLocation=locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+        }
+        Double longitude = gpsLocation.getLatitude();
+        Double latitude = gpsLocation.getLatitude();
+
         String grid_index = long_lat_info_to_grid_info(longitude, latitude);
 
         File filex = new File("/sdcard/DCIM/Camera/VID_20150728_211002.mp4");
@@ -337,7 +342,11 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         final ArrayList<Marker> markerArray = setMarker();
         LatLng currentLoc = new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
         ArrayList<Marker> boundedList = getBoundedMarkers(markerArray);
-
+        if (gpsLocation == null) {
+            gpsLocation = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+            Log.d("tag","=============changed to ========================");
+            Log.d("tag",gpsLocation.toString());
+        }
         main_activity_map.setMyLocationEnabled(true);
         main_activity_map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 13));
         main_activity_map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {

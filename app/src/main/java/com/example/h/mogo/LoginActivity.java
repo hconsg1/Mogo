@@ -100,6 +100,7 @@ public class LoginActivity extends FragmentActivity {
         super.onResume();
         Profile profile = Profile.getCurrentProfile();
         Log.d("tag", "=========================on Resume FROM LOGIN =================================================");
+      //  Log.d("login",profile.toString());
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         //TODO: do something with the profile
