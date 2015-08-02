@@ -67,6 +67,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        getLocation();
         setContentView(R.layout.activity_main);
 
         // Enable Local Datastore.
@@ -81,7 +82,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
 
         //start updating current location
-        getLocation();
 
 
         //TODO: THIS BUTTON SHOULD BE THE MAP ITSELF : WHEN USER DRAGS OVER MAP THEN NEW ACTIVITY BY EXPANSION
@@ -263,7 +263,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                 System.out.println("=======================  starting on location changed ========================");
                 gpsLocation = location;
                 //I make a log to see the results
-                Log.e("MY CURRENT LOCATION", myLocation);
+                Log.e("MY CURRENT LOCATION", gpsLocation.toString());
             }
 
             @Override
@@ -277,7 +277,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         //WHERE IS LOCATION MANAGER BEING INSTANTIATED??
 
 
-        locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 100, 0, locationListener);
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
