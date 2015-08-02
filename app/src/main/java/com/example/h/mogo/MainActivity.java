@@ -25,8 +25,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.VisibleRegion;
 import com.parse.Parse;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -35,7 +33,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -231,8 +228,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
     public void uploadVideo(){
         if (gpsLocation==null){
-
-            gpsLocation=locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+            gpsLocation=locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
         Double longitude = gpsLocation.getLatitude();
         Double latitude = gpsLocation.getLatitude();
@@ -278,11 +274,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
             @Override
             public void onProviderDisabled(String s) {}
         };
-        //TODO: NULL POINTER EXCEPTION
-        //WHERE IS LOCATION MANAGER BEING INSTANTIATED??
 
-
-        locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 100, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, locationListener);
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
@@ -339,74 +332,77 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap map) {
         main_activity_map = map;
-        final ArrayList<Marker> markerArray = setMarker();
-        LatLng currentLoc = new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
-        ArrayList<Marker> boundedList = getBoundedMarkers(markerArray);
+        //final ArrayList<Marker> markerArray = setMarker();
+        //ArrayList<Marker> boundedList = getBoundedMarkers(markerArray);
+
         if (gpsLocation == null) {
-            gpsLocation = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+            gpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             Log.d("tag","=============changed to ========================");
             Log.d("tag",gpsLocation.toString());
         }
+
+        LatLng currentLoc = new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
+
         main_activity_map.setMyLocationEnabled(true);
         main_activity_map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 13));
         main_activity_map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-                Log.d("m","=====================camera move=====================");
-                System.out.println(getBoundedMarkers(markerArray));
+//                Log.d("m","=====================camera move=====================");
+//                System.out.println(getBoundedMarkers(markerArray));
             }
         });
 
-        Log.d("tag","=============map ready==============");
-        System.out.println(boundedList);
+        Log.d("tag", "=============map ready==============");
+        //System.out.println(boundedList);
     }
+//
+//    public ArrayList<Marker> getBoundedMarkers(ArrayList<Marker> markerArray){
+//        ArrayList<Marker> markerList = new ArrayList<>();
+//        for (Marker marker : markerArray){
+//            if (isVisibleOnMap(marker.getPosition())){
+//                markerList.add(marker);
+//            }
+//        }
+//        mapMarkers = markerList;
+//        return markerList;
+//
+//
+//    }
+//
+//    public boolean isVisibleOnMap(LatLng latLng) {
+//        VisibleRegion vr = main_activity_map.getProjection().getVisibleRegion();
+//        return vr.latLngBounds.contains(latLng);
+//    }
 
-    public ArrayList<Marker> getBoundedMarkers(ArrayList<Marker> markerArray){
-        ArrayList<Marker> markerList = new ArrayList<>();
-        for (Marker marker : markerArray){
-            if (isVisibleOnMap(marker.getPosition())){
-                markerList.add(marker);
-            }
-        }
-        mapMarkers = markerList;
-        return markerList;
-
-
-    }
-
-    public boolean isVisibleOnMap(LatLng latLng) {
-        VisibleRegion vr = main_activity_map.getProjection().getVisibleRegion();
-        return vr.latLngBounds.contains(latLng);
-    }
-
-    public ArrayList<Marker> setMarker(){
-        //setMarkers , return Marker array
-        Log.d("tag","===================set Marker==============================");
-        LatLng loc1 = new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
-        Log.d("tag",loc1.toString());
-        Marker marker1 = main_activity_map.addMarker(new MarkerOptions()
-                .title("my current location")
-                .snippet("click this button to show all videos around you!")
-                .position(loc1));
-
-        main_activity_map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Intent intent = new Intent(MainActivity.this, MyVideoView.class);
-                startActivity(intent);
-                return false;
-            }
-        });
-
-        ArrayList<Marker> markerList = new ArrayList<Marker>();
-        markerList.add(marker1);
-        return markerList;
-    }
-
-    public ArrayList<Marker> setExampleMarkers(){
-
-        return new ArrayList<Marker>();
-    }
+//    public ArrayList<Marker> setMarker(){
+//        //setMarkers , return Marker array
+//        Log.d("tag","===================set Marker==============================");
+//        LatLng loc1 = new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
+//        Log.d("tag",loc1.toString());
+//        Marker marker1 = main_activity_map.addMarker(new MarkerOptions()
+//                .title("my current location")
+//                .snippet("click this button to show all videos around you!")
+//                .position(loc1));
+//
+//        main_activity_map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//            @Override
+//            public boolean onMarkerClick(Marker marker) {
+//                Intent intent = new Intent(MainActivity.this, MyVideoView.class);
+//                startActivity(intent);
+//                return false;
+//            }
+//        });
+//
+//        ArrayList<Marker> markerList = new ArrayList<Marker>();
+//        markerList.add(marker1);
+//        return markerList;
+//    }
+//
+//    public ArrayList<Marker> setExampleMarkers(){
+//
+//        return new ArrayList<Marker>();
+//    }
 
 
 }//end of main activity class
