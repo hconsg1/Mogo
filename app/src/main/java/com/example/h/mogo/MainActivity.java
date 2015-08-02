@@ -335,7 +335,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap map) {
         main_activity_map = map;
         final ArrayList<Marker> markerArray = setMarker();
-        LatLng currentLoc = new LatLng(41.8262, -71.4032);
+        LatLng currentLoc = new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
         ArrayList<Marker> boundedList = getBoundedMarkers(markerArray);
 
         main_activity_map.setMyLocationEnabled(true);
@@ -372,8 +372,9 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
     public ArrayList<Marker> setMarker(){
         //setMarkers , return Marker array
-
+        Log.d("tag","===================set Marker==============================");
         LatLng loc1 = new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
+        Log.d("tag",loc1.toString());
         Marker marker1 = main_activity_map.addMarker(new MarkerOptions()
                 .title("my current location")
                 .snippet("click this button to show all videos around you!")
@@ -391,6 +392,11 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         ArrayList<Marker> markerList = new ArrayList<Marker>();
         markerList.add(marker1);
         return markerList;
+    }
+
+    public ArrayList<Marker> setExampleMarkers(){
+
+        return new ArrayList<Marker>();
     }
 
 
