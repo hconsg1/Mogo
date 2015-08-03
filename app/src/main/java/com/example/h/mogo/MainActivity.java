@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
+import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -104,7 +105,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         Log.d("pth", path.getAbsolutePath());
 
 
-        //uploadVideo();
+        uploadVideo();
         //startCamera();
         //dispatchTakeVideoIntent();
 
@@ -132,7 +133,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         //TODO: get all the video with the same grid index from parse and set the url of the videos to each of them
         List<ParseObject> objectList;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("VideoUploadX");
-        grid_info = "11_11";
+        grid_info = "-71405_41828";
         query.whereEqualTo("grid_index", grid_info);
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> list, com.parse.ParseException e) {
@@ -156,11 +157,17 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     }
 
 
-    public void turn_on_video(String url){
+    public void turn_on_video(String uri){
         Log.d("main","Turn On Video============================================");
-        final VideoView myvideoview = (VideoView)findViewById(R.id.VideoView1);
-        myvideoview.setVideoPath(url);
-        myvideoview.start();
+        Log.d("main", uri);
+         VideoView vd = (VideoView)findViewById(R.id.VideoView1);
+        MediaController mc = new MediaController(MainActivity.this);
+        vd.setMediaController(mc);
+        vd.requestFocus();
+        //vd.setVideoURI(Uri.parse(uri));
+        vd.setVideoPath( "http://www.ebookfrenzy.com/android_book/movie.mp4");
+        vd.requestFocus();
+        vd.start();
     }
 
     public boolean need_new_video_feed(){
@@ -307,7 +314,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
         String grid_index = long_lat_info_to_grid_info(longitude, latitude);
 
-        File filex = new File("/sdcard/DCIM/Camera/VID_20150728_211002.mp4");
+        File filex = new File("/sdcard/Video1.mp4");
         System.out.println(filex);
         try {
             byte[] byteX = getBytesFromFile(filex);
@@ -319,6 +326,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
             obj.put("firstUpload", file);
             obj.put("grid_index", grid_index);
             obj.saveInBackground();
+            Log.d("main","=======SUCCESSUL FILE UPLOAD!!!!======================");
 
         }catch (Exception e) {
             e.printStackTrace();
