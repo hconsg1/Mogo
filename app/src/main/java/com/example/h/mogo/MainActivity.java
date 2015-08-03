@@ -133,7 +133,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         //TODO: get all the video with the same grid index from parse and set the url of the videos to each of them
         List<ParseObject> objectList;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("VideoUploadX");
-        grid_info = "-71405_41828";
+        grid_info = "-71408_41827";
         query.whereEqualTo("grid_index", grid_info);
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> list, com.parse.ParseException e) {
@@ -165,7 +165,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         vd.setMediaController(mc);
         vd.requestFocus();
         //vd.setVideoURI(Uri.parse(uri));
-        vd.setVideoPath( "http://www.ebookfrenzy.com/android_book/movie.mp4");
+        vd.setVideoPath(uri);
         vd.requestFocus();
         vd.start();
     }
@@ -309,12 +309,13 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         if (gpsLocation==null){
             gpsLocation=locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
-        Double longitude = gpsLocation.getLongitude();
         Double latitude = gpsLocation.getLatitude();
+        Double longitude = gpsLocation.getLongitude();
 
-        String grid_index = long_lat_info_to_grid_info(longitude, latitude);
 
-        File filex = new File("/sdcard/Video1.mp4");
+        String grid_index = long_lat_info_to_grid_info(latitude, longitude);
+
+        File filex = new File("/sdcard/VideoB.mp4");
         System.out.println(filex);
         try {
             byte[] byteX = getBytesFromFile(filex);
@@ -355,7 +356,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
             public void onProviderDisabled(String s) {}
         };
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 100, locationListener);
         if (gpsLocation == null) {
             gpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             current_grid_location = long_lat_info_to_grid_info(gpsLocation.getLongitude(), gpsLocation.getLatitude());
@@ -421,8 +422,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         //ArrayList<Marker> boundedList = getBoundedMarkers(markerArray);
         double mylong = gpsLocation.getLongitude();
         double mylat = gpsLocation.getLatitude();
-        LatLng currentLoc = new LatLng(mylong, mylat);
-        String grid_location = long_lat_info_to_grid_info(mylong, mylat);
+        LatLng currentLoc = new LatLng(mylat, mylong);
+        String grid_location = long_lat_info_to_grid_info(mylat, mylong);
        // get_new_video_feed(grid_location);
 
         main_activity_map.setMyLocationEnabled(true);
