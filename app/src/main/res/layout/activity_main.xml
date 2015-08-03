@@ -20,7 +20,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="fill_parent" android:background="#0000">
+        <LinearLayout android:id="@+id/main_activity_video_scrollView_wrapper" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="fill_parent" android:background="#0000">
+
             <LinearLayout android:id="@+id/contentVideo1" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingTop="15px" android:background="#0000">
                <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="#0000">
                     <VideoView android:id="@+id/VideoView1" android:layout_width="match_parent" android:layout_height="200dip"  android:background="#0000"/>

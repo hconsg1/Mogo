@@ -18,6 +18,8 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -39,7 +41,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -117,6 +118,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         String myurl = "";
         try {
             myurl = videoFile.getUrl();
+
         }catch(Exception e){
             System.out.println("parseException");
             System.out.println("===============================ERROR =======================");
@@ -133,7 +135,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         //TODO: get all the video with the same grid index from parse and set the url of the videos to each of them
         List<ParseObject> objectList;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("VideoUploadX");
-        grid_info = "-71405_41828";
+        //TODO: change variable grid_info to actual grid of current location of the user
+        grid_info = "-71408_41827";
         query.whereEqualTo("grid_index", grid_info);
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> list, com.parse.ParseException e) {
@@ -141,11 +144,25 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                     //TODO: SUCCESS
                     Log.d("main","================received Parse Objects======");
                     String url = "";
+                    //TODO: loop through query returned objects
                     for (ParseObject object : list) {
                         url = getVideoUrl(object);
                         Log.d("main",getVideoUrl(object));
+                        LinearLayout scroll_view = (LinearLayout) findViewById(R.id.main_activity_video_scrollView_wrapper);
+                        VideoView video = new VideoView(MainActivity.this);
+                        video.setVideoPath(url);
+
+                        video.setLayoutParams(new FrameLayout.LayoutParams(550, 550));
+                        scroll_view.addView(video);
+                        MediaController mc = new MediaController(MainActivity.this);
+                        video.setMediaController(mc);
+
+                        //TODO: should i do other stuff like focus?
                     }
-                    turn_on_video(url);
+
+                    //TODO: turn on video for the very first video
+                    //turn_on_video(url);
+
                 } else {
                     //TODO :ERROR
                     Log.d("main", "=================ERROR in getting video from obj================");
@@ -158,14 +175,14 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
 
     public void turn_on_video(String uri){
-        Log.d("main","Turn On Video============================================");
+        System.out.println(" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        Log.d("main", "Turn On Video============================================");
         Log.d("main", uri);
-         VideoView vd = (VideoView)findViewById(R.id.VideoView1);
+        VideoView vd = (VideoView)findViewById(R.id.VideoView1);
         MediaController mc = new MediaController(MainActivity.this);
         vd.setMediaController(mc);
         vd.requestFocus();
-        //vd.setVideoURI(Uri.parse(uri));
-        vd.setVideoPath( "http://www.ebookfrenzy.com/android_book/movie.mp4");
+        vd.setVideoPath(uri);
         vd.requestFocus();
         vd.start();
     }
@@ -326,7 +343,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
             obj.put("firstUpload", file);
             obj.put("grid_index", grid_index);
             obj.saveInBackground();
-            Log.d("main","=======SUCCESSUL FILE UPLOAD!!!!======================");
+            Log.d("main", "=======SUCCESSUL FILE UPLOAD!!!!======================");
 
         }catch (Exception e) {
             e.printStackTrace();
