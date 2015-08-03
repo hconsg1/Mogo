@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -14,8 +16,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -27,6 +34,7 @@ public class CameraActivity extends Activity {
     private Camera mCamera;
     private CameraPreview mPreview;
     private MediaRecorder mMediaRecorder;
+    private String outPutFilePath;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,8 +59,10 @@ public class CameraActivity extends Activity {
                             // stop recording and release camera
                             mMediaRecorder.stop();  // stop the recording
                             releaseMediaRecorder(); // release the MediaRecorder object
-                            mCamera.lock();         // take camera access back from MediaRecorder
 
+                            mCamera.lock();         // take camera access back from MediaRecorder
+                            Log.d("camera",outPutFilePath);
+                            uploadVideo(outPutFilePath);
                             // inform the user that recording has stopped
                             //setCaptureButtonText("Capture");
 
@@ -78,6 +88,63 @@ public class CameraActivity extends Activity {
         );
     }// end of on create for camera activity
 
+    public static byte[] getBytesFromFile(File file) throws IOException {
+        InputStream is = new FileInputStream(file);
+
+        // Get the size of the file
+        long length = file.length();
+
+        // You cannot create an array using a long type.
+        // It needs to be an int type.
+        // Before converting to an int type, check
+        // to ensure that file is not larger than Integer.MAX_VALUE.
+        if (length > Integer.MAX_VALUE) {
+            // File is too large
+        }
+
+        // Create the byte array to hold the data
+        byte[] bytes = new byte[(int)length];
+
+        // Read in the bytes
+        int offset = 0;
+        int numRead = 0;
+        while (offset < bytes.length
+                && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+            offset += numRead;
+        }
+
+        // Ensure all the bytes have been read in
+        if (offset < bytes.length) {
+            throw new IOException("Could not completely read file "+file.getName());
+        }
+
+        // Close the input stream and return bytes
+        is.close();
+        return bytes;
+    }
+    public void uploadVideo(String path){
+
+        String grid_index = "123_123";
+
+        File filex = new File(path);
+        System.out.println(filex);
+        try {
+            byte[] byteX = getBytesFromFile(filex);
+            ParseFile file = new ParseFile("thirdV.mp4", byteX);
+            file.saveInBackground();
+
+            ParseObject obj = new ParseObject("VideoUploadX");
+
+            obj.put("firstUpload", file);
+            obj.put("grid_index", grid_index);
+            obj.saveInBackground();
+            Log.d("main", "=======SUCCESSUL FILE UPLOAD!!!!======================");
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            System.out.print("======error in file upload function in main activity ===============");
+        }
+    }
     @Override
     protected void onPause() {
         super.onPause();
@@ -142,6 +209,7 @@ public class CameraActivity extends Activity {
 
         // Step 4: Set output file
         mMediaRecorder.setOutputFile(getOutputMediaFile(MEDIA_TYPE_VIDEO).toString());
+        outPutFilePath = getOutputMediaFile(MEDIA_TYPE_VIDEO).toString();
 
         // Step 5: Set the preview output
         mMediaRecorder.setPreviewDisplay(mPreview.getHolder().getSurface());

@@ -108,7 +108,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         Log.d("pth", path.getAbsolutePath());
 
 
-        uploadVideo();
+    //    uploadVideo();
         //startCamera();
         //dispatchTakeVideoIntent();
 
