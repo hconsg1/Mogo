@@ -95,7 +95,9 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 //TODO: start camera preview activity NEEDS TO BE CHANGED
-                startCamera();
+               //start camera preview activity
+                Intent video_record_intent = new Intent(MainActivity.this, CameraPreview.class);
+                MainActivity.this.startActivity(video_record_intent);
             }
         });
 
@@ -175,20 +177,20 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         });
     }
 
-
-    public void turn_on_video(String uri){
-        System.out.println(" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-        Log.d("main", "Turn On Video============================================");
-        Log.d("main", uri);
-        VideoView vd = (VideoView)findViewById(R.id.VideoView1);
-        MediaController mc = new MediaController(MainActivity.this);
-        vd.setMediaController(mc);
-        vd.requestFocus();
-
-        vd.setVideoPath(uri);
-        vd.requestFocus();
-        vd.start();
-    }
+//
+//    public void turn_on_video(String uri){
+//        System.out.println(" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+//        Log.d("main", "Turn On Video============================================");
+//        Log.d("main", uri);
+//        VideoView vd = (VideoView)findViewById(R.id.VideoView1);
+//        MediaController mc = new MediaController(MainActivity.this);
+//        vd.setMediaController(mc);
+//        vd.requestFocus();
+//
+//        vd.setVideoPath(uri);
+//        vd.requestFocus();
+//        vd.start();
+//    }
 
     public boolean need_new_video_feed(){
         if (gpsLocation == null) {
