@@ -19,6 +19,7 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -109,6 +110,19 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
 
     }//end of oncreate function of main activity
+    public String getVideoUrl(ParseObject object){
+        ParseFile videoFile = (ParseFile)object.get("firstUpload");
+        System.out.println("++++++++++++"+videoFile);
+        String myurl = "";
+        try {
+            myurl = videoFile.getUrl();
+        }catch(Exception e){
+            System.out.println("parseException");
+            System.out.println("===============================ERROR =======================");
+            e.printStackTrace();
+        }
+        return myurl;
+    }
 
     public void get_new_video_feed(String grid_info){
         System.out.println("=======================  starting get new video feed function ============================");
@@ -116,19 +130,37 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
 
         //TODO: get all the video with the same grid index from parse and set the url of the videos to each of them
+        List<ParseObject> objectList;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("VideoUploadX");
+        grid_info = "11_11";
         query.whereEqualTo("grid_index", grid_info);
         query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> scoreList, ParseException e) {
+            public void done(List<ParseObject> list, com.parse.ParseException e) {
                 if (e == null) {
                     //TODO: SUCCESS
-
+                    Log.d("main","================received Parse Objects======");
+                    String url = "";
+                    for (ParseObject object : list) {
+                        url = getVideoUrl(object);
+                        Log.d("main",getVideoUrl(object));
+                    }
+                    turn_on_video(url);
                 } else {
                     //TODO :ERROR
+                    Log.d("main", "=================ERROR in getting video from obj================");
 
                 }
             }
+
         });
+    }
+
+
+    public void turn_on_video(String url){
+        Log.d("main","Turn On Video============================================");
+        final VideoView myvideoview = (VideoView)findViewById(R.id.VideoView1);
+        myvideoview.setVideoPath(url);
+        myvideoview.start();
     }
 
     public boolean need_new_video_feed(){
@@ -383,7 +415,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         double mylat = gpsLocation.getLatitude();
         LatLng currentLoc = new LatLng(mylong, mylat);
         String grid_location = long_lat_info_to_grid_info(mylong, mylat);
-        get_new_video_feed(grid_location);
+       // get_new_video_feed(grid_location);
 
         main_activity_map.setMyLocationEnabled(true);
         main_activity_map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 13));

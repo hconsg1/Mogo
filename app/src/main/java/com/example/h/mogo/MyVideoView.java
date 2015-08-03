@@ -37,7 +37,7 @@ public class MyVideoView extends ActionBarActivity {
                 System.out.println("===============================ERROR =======================");
                 e.printStackTrace();
             }
-            //this.turn_on_video(myurl);
+            this.turn_on_video(myurl);
             System.out.println("ggggggggggggggggggg"+ myurl + "$$$$$$$$$$$$$$$$$$$$$$$$");
             System.out.println("=========== 6666666666666666666666666666666666666   =======================");
             System.out.print("/////////////////////////////////////////!!!!!!"+ myurl);
@@ -50,7 +50,8 @@ public class MyVideoView extends ActionBarActivity {
     }
 
     public void turn_on_video(String url){
-        final VideoView myvideoview = (VideoView)findViewById(R.id.video_view1);
+
+        final VideoView myvideoview = (VideoView)findViewById(R.id.VideoView1);
         myvideoview.setVideoPath(url);
         myvideoview.start();
     }
