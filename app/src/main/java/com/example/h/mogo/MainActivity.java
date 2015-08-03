@@ -381,7 +381,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 100, locationListener);
         if (gpsLocation == null) {
             gpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            current_grid_location = long_lat_info_to_grid_info(gpsLocation.getLongitude(), gpsLocation.getLatitude());
         }
 
     }
@@ -446,6 +445,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         double mylat = gpsLocation.getLatitude();
         LatLng currentLoc = new LatLng(mylat, mylong);
         String grid_location = long_lat_info_to_grid_info(mylat, mylong);
+        current_grid_location = grid_location;
        // get_new_video_feed(grid_location);
 
         main_activity_map.setMyLocationEnabled(true);
