@@ -96,7 +96,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
             public void onClick(View view) {
                 //TODO: start camera preview activity NEEDS TO BE CHANGED
                //start camera preview activity
-                Intent video_record_intent = new Intent(MainActivity.this, CameraPreview.class);
+                Intent video_record_intent = new Intent(MainActivity.this, CameraActivity.class);
                 MainActivity.this.startActivity(video_record_intent);
             }
         });
