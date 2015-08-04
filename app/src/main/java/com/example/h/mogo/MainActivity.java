@@ -75,7 +75,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        getLocation();
+       // getLocation();
         setContentView(R.layout.activity_main);
 
         // Enable Local Datastore.
@@ -97,6 +97,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                 //TODO: start camera preview activity NEEDS TO BE CHANGED
                //start camera preview activity
                 Intent video_record_intent = new Intent(MainActivity.this, CameraActivity.class);
+                video_record_intent.putExtra("location",long_lat_info_to_grid_info(gpsLocation.getLatitude(),gpsLocation.getLongitude()));
                 MainActivity.this.startActivity(video_record_intent);
             }
         });
@@ -140,7 +141,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
         //TODO: change variable grid_info to actual grid of current location of the user
 
-        grid_info = "-71408_41827";
+
         query.whereEqualTo("grid_index", grid_info);
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> list, com.parse.ParseException e) {
@@ -196,7 +197,9 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         gpsLocation = getLastKnownLocation();
         Double current_long = gpsLocation.getLongitude();
         Double current_lat = gpsLocation.getLatitude();
-        String new_grid = long_lat_info_to_grid_info(current_long, current_lat);
+        String new_grid = long_lat_info_to_grid_info(current_lat, current_long);
+        Log.d("newV","=========================="+new_grid+"=================");
+
         if(current_grid_location == new_grid){
             return false;
         }else{
@@ -237,7 +240,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         super.onResume();
         getLocation();
         if(need_new_video_feed() == true){
-            String current_grid_index = long_lat_info_to_grid_info(gpsLocation.getLongitude(), gpsLocation.getLatitude());
+            String current_grid_index = long_lat_info_to_grid_info(gpsLocation.getLatitude(), gpsLocation.getLongitude());
             get_new_video_feed(current_grid_index);
         }
     }

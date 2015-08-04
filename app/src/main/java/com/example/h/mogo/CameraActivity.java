@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.location.Location;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -34,12 +35,14 @@ public class CameraActivity extends Activity {
     private MediaRecorder mMediaRecorder;
     private String outPutFilePath;
     private Button capture_button;
+    String grid_info;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_preview);
-
+        grid_info = getIntent().getExtras().getString("location");
+        System.out.println("=============="+grid_info+"=====================");
         // Create an instance of Camera
         mCamera = getCameraInstance();
         mCamera.setDisplayOrientation(90);
@@ -135,7 +138,7 @@ public class CameraActivity extends Activity {
     }
     public void uploadVideo(String path){
 
-        String grid_index = "123_123";
+        String grid_index = grid_info;
 
         File filex = new File(path);
         System.out.println(filex);
