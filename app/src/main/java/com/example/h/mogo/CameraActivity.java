@@ -42,9 +42,9 @@ public class CameraActivity extends Activity {
 
         // Create an instance of Camera
         mCamera = getCameraInstance();
-        System.out.println("===================== THIS IS THE CAMERA =======================");
-        System.out.println(mCamera);
-        System.out.println("====================================================");
+        mCamera.setDisplayOrientation(90);
+        Camera.Parameters camera_parameter = mCamera.getParameters();
+
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
@@ -87,11 +87,18 @@ public class CameraActivity extends Activity {
                     }
                 }
         );
+
+        mCamera.setFaceDetectionListener(new Camera_Face_Detection_Listener());
+
     }// end of on create for camera activity
 
+
+
+    //TODO: change the text of button / or create a Toast to let user know if camera is on or not
     public void setCaptureButtonText(String text){
         capture_button.setText(text);
     }
+
     public static byte[] getBytesFromFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);
 
@@ -189,6 +196,7 @@ public class CameraActivity extends Activity {
         Camera c = null;
         try {
             c = Camera.open(); // attempt to get a Camera instance
+
         }
         catch (Exception e){
             // Camera is not available (in use or does not exist)
