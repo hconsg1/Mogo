@@ -14,12 +14,13 @@ public class MyVideoView extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.videoview_activity);
-        this.getVideofromParse();
+     //   this.getVideofromParse();
 
 
 
     }
 
+/*
     public void getVideofromParse(){
         System.out.println("=========== get videp from parser astasr========================");
         ParseQuery<ParseObject> query = ParseQuery.getQuery("VideoUpload");
@@ -47,6 +48,7 @@ public class MyVideoView extends ActionBarActivity {
         }
 
     }
+*/
 
 //    public void turn_on_video(String url){
 //

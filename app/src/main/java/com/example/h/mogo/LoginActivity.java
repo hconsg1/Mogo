@@ -54,6 +54,7 @@ public class LoginActivity extends FragmentActivity {
                 // App code
                 System.out.println("===================FACEBOOK LOGIN SUCCESSS ===========================================");
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                finish();
                 startActivity(intent);
             }
 
@@ -102,6 +103,7 @@ public class LoginActivity extends FragmentActivity {
         Log.d("tag", "=========================on Resume FROM LOGIN =================================================");
       //  Log.d("login",profile.toString());
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        finish();
         startActivity(intent);
         //TODO: do something with the profile
 

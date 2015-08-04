@@ -1,6 +1,8 @@
 package com.example.h.mogo;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,6 +17,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
@@ -80,6 +84,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
         // Enable Local Datastore.
         // set parse key and value config
+        Log.d("main", "===========================onCreateMain==================");
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, "Twc5KQkxtq0yenh2uHBp3GVwfqW48kwKIgLThZvM", "vLlrTC1DrowiyZJtzURRuSUpI64dOFvoBt1AqRIC");
 
@@ -98,6 +103,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                //start camera preview activity
                 Intent video_record_intent = new Intent(MainActivity.this, CameraActivity.class);
                 video_record_intent.putExtra("location",long_lat_info_to_grid_info(gpsLocation.getLatitude(),gpsLocation.getLongitude()));
+
                 MainActivity.this.startActivity(video_record_intent);
             }
         });
@@ -133,7 +139,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     public void get_new_video_feed(String grid_info){
         System.out.println("=======================  starting get new video feed function ============================");
         //TODO: delete everything in the scroll view
-
+        LinearLayout scroll_view = (LinearLayout) findViewById(R.id.main_activity_video_scrollView_wrapper);
+        scroll_view.removeAllViews();
 
         //TODO: get all the video with the same grid index from parse and set the url of the videos to each of them
         List<ParseObject> objectList;
@@ -152,7 +159,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                     //TODO: loop through query returned objects
                     for (ParseObject object : list) {
                         url = getVideoUrl(object);
-                        Log.d("main",getVideoUrl(object));
+                        Log.d("main", getVideoUrl(object));
                         LinearLayout scroll_view = (LinearLayout) findViewById(R.id.main_activity_video_scrollView_wrapper);
                         VideoView video = new VideoView(MainActivity.this);
                         video.setVideoPath(url);
@@ -192,6 +199,15 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 //        vd.requestFocus();
 //        vd.start();
 //    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        return super.onOptionsItemSelected(item);
+    }
 
     public boolean need_new_video_feed(){
         gpsLocation = getLastKnownLocation();
