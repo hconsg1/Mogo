@@ -193,9 +193,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 //    }
 
     public boolean need_new_video_feed(){
-        if (gpsLocation == null) {
-            gpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        }
+        gpsLocation = getLastKnownLocation();
         Double current_long = gpsLocation.getLongitude();
         Double current_lat = gpsLocation.getLatitude();
         String new_grid = long_lat_info_to_grid_info(current_long, current_lat);
@@ -204,6 +202,22 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         }else{
             return true;
         }
+    }
+
+    private Location getLastKnownLocation() {
+        List<String> providers = locationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            Location l = locationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+        return bestLocation;
     }
 
 
@@ -329,7 +343,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     //TODO: this funcion needs to be called in camera view activity not here
     public void uploadVideo(){
         if (gpsLocation==null){
-            gpsLocation=locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            gpsLocation=getLastKnownLocation();
         }
         Double latitude = gpsLocation.getLatitude();
         Double longitude = gpsLocation.getLongitude();
@@ -359,6 +373,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
 
     public void getLocation(){
+        gpsLocation = getLastKnownLocation();
         locationListener = new LocationListener(){
 
             @Override
@@ -379,9 +394,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         };
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 100, locationListener);
-        if (gpsLocation == null) {
-            gpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        }
+
 
     }
 

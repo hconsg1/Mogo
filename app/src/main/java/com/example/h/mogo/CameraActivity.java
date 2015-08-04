@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.location.Location;
-import android.location.LocationManager;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -35,6 +33,7 @@ public class CameraActivity extends Activity {
     private CameraPreview mPreview;
     private MediaRecorder mMediaRecorder;
     private String outPutFilePath;
+    private Button capture_button;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,15 +42,17 @@ public class CameraActivity extends Activity {
 
         // Create an instance of Camera
         mCamera = getCameraInstance();
-
+        System.out.println("===================== THIS IS THE CAMERA =======================");
+        System.out.println(mCamera);
+        System.out.println("====================================================");
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
         preview.addView(mPreview);
 
         // Add a listener to the Capture button
-        Button captureButton = (Button) findViewById(R.id.button_capture);
-        captureButton.setOnClickListener(
+        capture_button = (Button) findViewById(R.id.button_capture);
+        capture_button.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -88,6 +89,9 @@ public class CameraActivity extends Activity {
         );
     }// end of on create for camera activity
 
+    public void setCaptureButtonText(String text){
+        capture_button.setText(text);
+    }
     public static byte[] getBytesFromFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);
 
@@ -181,19 +185,25 @@ public class CameraActivity extends Activity {
 
     /** A safe way to get an instance of the Camera object. */
     public static Camera getCameraInstance(){
+
         Camera c = null;
         try {
             c = Camera.open(); // attempt to get a Camera instance
         }
         catch (Exception e){
             // Camera is not available (in use or does not exist)
+            System.out.println("============= error in GET CAMERA INSTNACE EXCEPTION ============================");
+            e.printStackTrace();
         }
         return c; // returns null if camera is unavailable
     }
 
     private boolean prepareVideoRecorder(){
 
-        mCamera = getCameraInstance();
+        //mCamera = getCameraInstance();
+        System.out.println("=================== PRINTING CAMERA INSTANCE ======================");
+        System.out.println(mCamera);
+        System.out.println("================  END ========================");
         mMediaRecorder = new MediaRecorder();
 
         // Step 1: Unlock and set camera to MediaRecorder
