@@ -1,8 +1,6 @@
 package com.example.h.mogo;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,7 +15,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -161,10 +158,12 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                         url = getVideoUrl(object);
                         Log.d("main", getVideoUrl(object));
                         LinearLayout scroll_view = (LinearLayout) findViewById(R.id.main_activity_video_scrollView_wrapper);
+                        int width = scroll_view.getWidth();
+
                         VideoView video = new VideoView(MainActivity.this);
                         video.setVideoPath(url);
 
-                        video.setLayoutParams(new FrameLayout.LayoutParams(550, 550));
+                        video.setLayoutParams(new FrameLayout.LayoutParams((width-1), (width-1)));
                         scroll_view.addView(video);
                         MediaController mc = new MediaController(MainActivity.this);
                         video.setMediaController(mc);
