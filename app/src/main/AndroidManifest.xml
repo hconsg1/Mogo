@@ -27,7 +27,7 @@
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="867608409941636" />
 
 
         <meta-data
@@ -68,6 +68,11 @@
         <activity
             android:name=".MapView"
             android:label="@string/title_activity_map_view" >
+        </activity>
+
+        <activity
+            android:name=".Video_PlayBack_Confirmation_Activity"
+            android:label="mogo" >
         </activity>
 
     </application>

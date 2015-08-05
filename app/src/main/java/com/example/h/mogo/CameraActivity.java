@@ -69,8 +69,9 @@ public class CameraActivity extends Activity {
                             mCamera.lock();         // take camera access back from MediaRecorder
                             Log.d("camera", outPutFilePath);
                             Intent video_playback_intent = new Intent(CameraActivity.this, Video_PlayBack_Confirmation_Activity.class);
-                            //video_playback_intent.putExtra("file_path",      );
-                            CameraActivity.this.startActivity(video_playback_intent);
+                            video_playback_intent.putExtra("file_path", outPutFilePath);
+                            video_playback_intent.putExtra("gridInfo", grid_info);
+                            startActivity(video_playback_intent);
 
                             //uploadVideo(outPutFilePath);
 
@@ -139,29 +140,7 @@ public class CameraActivity extends Activity {
     }
 
 
-    public void uploadVideo(String path){
 
-        String grid_index = grid_info;
-
-        File filex = new File(path);
-        System.out.println(filex);
-        try {
-            byte[] byteX = getBytesFromFile(filex);
-            ParseFile file = new ParseFile("thirdV.mp4", byteX);
-            file.saveInBackground();
-
-            ParseObject obj = new ParseObject("VideoUploadX");
-
-            obj.put("firstUpload", file);
-            obj.put("grid_index", grid_index);
-            obj.saveInBackground();
-            Log.d("main", "=======SUCCESSUL FILE UPLOAD!!!!======================");
-
-        }catch (Exception e) {
-            e.printStackTrace();
-            System.out.print("======error in file upload function in main activity ===============");
-        }
-    }
     @Override
     protected void onPause() {
         super.onPause();
