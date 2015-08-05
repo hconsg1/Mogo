@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.location.Location;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -136,6 +135,8 @@ public class CameraActivity extends Activity {
         is.close();
         return bytes;
     }
+
+
     public void uploadVideo(String path){
 
         String grid_index = grid_info;

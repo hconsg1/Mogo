@@ -10,7 +10,9 @@
         android:id="@+id/main_activity_map"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:layout_height="200dp"
+        android:background="#bada55"/>
+
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -18,7 +20,8 @@
         android:id="@+id/main_activity_video_scrollView"
         android:layout_below="@+id/main_activity_map"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:background="4a4a4a">
 
         <LinearLayout android:id="@+id/main_activity_video_scrollView_wrapper" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="fill_parent" android:background="#0000">
 
@@ -41,12 +44,23 @@
 
         </LinearLayout>
     </ScrollView>
-    <RelativeLayout android:layout_width="fill_parent"
-        android:layout_height="fill_parent" android:gravity="bottom">
 
-        <Button android:id="@+id/main_activity_start_camera"   android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:text="Camera button" />
 
-    </RelativeLayout>
+
+    <LinearLayout android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:gravity="bottom"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/main_activity_start_camera"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_vertical|center"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
 
 </RelativeLayout>
