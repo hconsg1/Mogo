@@ -2,6 +2,7 @@ package com.example.h.mogo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
@@ -58,18 +59,23 @@ public class CameraActivity extends Activity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //TODO: stop the video and start the video playback confirmation activity
+                        //need to store the video in internal storage and push the file path to the video playback activity
                         if (isRecording) {
+
                             // stop recording and release camera
                             mMediaRecorder.stop();  // stop the recording
                             releaseMediaRecorder(); // release the MediaRecorder object
-
                             mCamera.lock();         // take camera access back from MediaRecorder
-                            Log.d("camera",outPutFilePath);
-                            uploadVideo(outPutFilePath);
-                            // inform the user that recording has stopped
-                            //setCaptureButtonText("Capture");
+                            Log.d("camera", outPutFilePath);
+                            Intent video_playback_intent = new Intent(CameraActivity.this, Video_PlayBack_Confirmation_Activity.class);
+                            //video_playback_intent.putExtra("file_path",      );
+                            CameraActivity.this.startActivity(video_playback_intent);
+
+                            //uploadVideo(outPutFilePath);
 
                             isRecording = false;
+
                         } else {
                             // initialize video camera
                             if (prepareVideoRecorder()) {

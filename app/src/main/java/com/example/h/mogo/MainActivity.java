@@ -86,8 +86,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         Parse.initialize(this, "Twc5KQkxtq0yenh2uHBp3GVwfqW48kwKIgLThZvM", "vLlrTC1DrowiyZJtzURRuSUpI64dOFvoBt1AqRIC");
 
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.main_activity_map);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.main_activity_map);
         mapFragment.getMapAsync(this);
 
 
@@ -112,7 +111,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         Log.d("pth", path.getAbsolutePath());
 
 
-    //    uploadVideo();
+        //uploadVideo();
         //startCamera();
         //dispatchTakeVideoIntent();
 
