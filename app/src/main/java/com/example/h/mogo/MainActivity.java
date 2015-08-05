@@ -262,16 +262,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
 
 
-    private void startCamera(){
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);  // create a file to save the video
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);  // set the image file name
-        //intent.putExtra(MediaStore.EXTRA__QUALITY, 1); // set the video image quality to hig
-        // start the Video Capture Intent
-        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-    }
-
-
     /** Create a file Uri for saving an image or video */
     private static Uri getOutputMediaFileUri(int type){
         return Uri.fromFile(getOutputMediaFile(type));
