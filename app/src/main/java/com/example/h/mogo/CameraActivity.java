@@ -11,8 +11,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -33,7 +33,7 @@ public class CameraActivity extends Activity {
     private CameraPreview mPreview;
     private MediaRecorder mMediaRecorder;
     private String outPutFilePath;
-    private Button capture_button;
+    private ImageButton capture_button;
     String grid_info;
 
     @Override
@@ -53,7 +53,7 @@ public class CameraActivity extends Activity {
         preview.addView(mPreview);
 
         // Add a listener to the Capture button
-        capture_button = (Button) findViewById(R.id.button_capture);
+        capture_button = (ImageButton) findViewById(R.id.button_capture);
         capture_button.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -96,10 +96,6 @@ public class CameraActivity extends Activity {
 
 
 
-    //TODO: change the text of button / or create a Toast to let user know if camera is on or not
-    public void setCaptureButtonText(String text){
-        capture_button.setText(text);
-    }
 
     public static byte[] getBytesFromFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);

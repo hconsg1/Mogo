@@ -18,8 +18,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.Toast;
@@ -93,7 +93,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
 
         //TODO: THIS BUTTON SHOULD BE THE MAP ITSELF : WHEN USER DRAGS OVER MAP THEN NEW ACTIVITY BY EXPANSION
-        Button button = (Button) findViewById(R.id.main_activity_start_camera);
+        ImageButton button = (ImageButton) findViewById(R.id.main_activity_start_camera);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 //TODO: start camera preview activity NEEDS TO BE CHANGED

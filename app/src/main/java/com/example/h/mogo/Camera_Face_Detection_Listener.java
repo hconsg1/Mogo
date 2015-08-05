@@ -2,9 +2,6 @@ package com.example.h.mogo;
 
 import android.hardware.Camera;
 
-/**
- * Created by USER on 2015-08-03.
- */
 public class Camera_Face_Detection_Listener implements Camera.FaceDetectionListener{
 
     @Override
