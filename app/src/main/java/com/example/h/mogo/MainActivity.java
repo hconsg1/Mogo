@@ -79,11 +79,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
        // getLocation();
         setContentView(R.layout.activity_main);
 
-        // Enable Local Datastore.
-        // set parse key and value config
-        Log.d("main", "===========================onCreateMain==================");
-        Parse.enableLocalDatastore(this);
-        Parse.initialize(this, "Twc5KQkxtq0yenh2uHBp3GVwfqW48kwKIgLThZvM", "vLlrTC1DrowiyZJtzURRuSUpI64dOFvoBt1AqRIC");
+
 
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.main_activity_map);
