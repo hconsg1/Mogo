@@ -3,37 +3,27 @@ package com.example.h.mogo;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.hardware.Camera;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.media.CamcorderProfile;
-import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.Marker;
-import com.parse.Parse;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 public class Video_PlayBack_Confirmation_Activity extends Activity {
 
@@ -79,9 +69,22 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
 
     //TODO: this funcion needs to be called in camera view activity not here
     public void uploadVideo(String path, String grid_index){
-
-        //String grid_index = long_lat_info_to_grid_info(latitude, longitude);
-
+        String user_id = "";
+        //TODO: each video upload needs data about the user
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser.has("profile")) {
+            JSONObject userProfile = currentUser.getJSONObject("profile");
+            try {
+                if (userProfile.has("facebookId")) {
+                    user_id = userProfile.getString("facebookId");
+                } else {
+                    System.out.println("=============USER PROFILE DOES NOT HAVE KEY FACEBOOKID =====================");
+                }
+            }catch (JSONException e) {
+                System.out.println("============= ERROR GETTING USER ID FROM PARSE FACEBOOK BEFORE UPLOADING VIDEO IN VIDEO PLAY BACK ACTIVITY =====================");
+                e.printStackTrace();
+            }
+        }
         File filex = new File(path);
         System.out.println(filex);
         try {
@@ -93,6 +96,7 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
 
             obj.put("firstUpload", file);
             obj.put("grid_index", grid_index);
+            obj.put("creator_id", user_id);
             obj.saveInBackground();
             Log.d("main", "=======SUCCESSUL FILE UPLOAD!!!!======================");
 
