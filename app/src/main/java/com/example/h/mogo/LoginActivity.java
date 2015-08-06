@@ -5,8 +5,10 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
+import com.facebook.login.widget.LoginButton;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -24,6 +26,14 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
+        LoginButton fb_button = (LoginButton)findViewById(R.id.facebook_login_button);
+        fb_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("pb", "=======================OnClick======================");
+                onLoginClick(v);
+            }
+        });
         // Check if there is a currently logged in user
         // and it's linked to a Facebook account.
         ParseUser currentUser = ParseUser.getCurrentUser();
@@ -31,12 +41,16 @@ public class LoginActivity extends Activity {
             // Go to the user info activity
             showMainActivity();
         }
+
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        System.out.println("000000000000000000000000000000000000000000000");
         super.onActivityResult(requestCode, resultCode, data);
         ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
+        System.out.println("111111111111111111111111111111111111111111111");
     }
 
     public void onLoginClick(View v) {
@@ -54,14 +68,16 @@ public class LoginActivity extends Activity {
                     //Log.d(IntegratingFacebookTutorialApplication.TAG, "Uh oh. The user cancelled the Facebook login.");
                 } else if (user.isNew()) {
                     //Log.d(IntegratingFacebookTutorialApplication.TAG, "User signed up and logged in through Facebook!");
+                    System.out.println("================ NEW USER   LOGGED IN !!!!!!!!! =====================================");
                     showMainActivity();
                 } else {
                     //Log.d(IntegratingFacebookTutorialApplication.TAG, "User logged in through Facebook!");
+                    System.out.println("================ LOGGED IN !!!!!!!!! =====================================");
                     showMainActivity();
                 }
             }
         });
-    }
+    }//end of login click
 
     private void showMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);

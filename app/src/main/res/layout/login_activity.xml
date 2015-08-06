@@ -17,7 +17,7 @@
         android:background="@drawable/img_login_logo"
         />
     <com.facebook.login.widget.LoginButton
-        android:id="@+id/faceook_login_button"
+        android:id="@+id/facebook_login_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"

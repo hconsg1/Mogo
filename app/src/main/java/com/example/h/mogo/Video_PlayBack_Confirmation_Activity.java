@@ -46,7 +46,7 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
         videoView.setMediaController(mc);
 
 
-        ImageButton imageButton = (ImageButton)findViewById(R.id.imageButton2);
+        ImageButton imageButton = (ImageButton)findViewById(R.id.playback_button_upload);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
