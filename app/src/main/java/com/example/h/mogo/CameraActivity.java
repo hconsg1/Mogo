@@ -15,9 +15,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
-import com.parse.ParseFile;
-import com.parse.ParseObject;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -54,7 +51,7 @@ public class CameraActivity extends Activity {
         preview.addView(mPreview);
 
         // Add a listener to the Capture button
-        capture_button = (ImageButton) findViewById(R.id.button_capture);
+        capture_button = (ImageButton) findViewById(R.id.camera_button_capture);
         capture_button.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
