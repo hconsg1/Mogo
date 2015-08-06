@@ -37,28 +37,28 @@
         android:paddingRight="20dp"
         android:layout_marginBottom="16dp"
         >
-        <!--<ImageButton-->
-            <!--android:id="@+id/camera_button_flip"-->
-            <!--&lt;!&ndash;android:background="@drawable/icon_camera_flip"&ndash;&gt;-->
-            <!--android:layout_width="50dp"-->
-            <!--android:layout_height="50dp"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:clickable="true"-->
-            <!--/>-->
-        <!--<ImageButton-->
-            <!--android:id="@+id/camera_button_capture"-->
-            <!--&lt;!&ndash;android:background="@drawable/icon_camera_start.png"&ndash;&gt;-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:scaleType="center"-->
-            <!--android:clickable="true"-->
-            <!--/>-->
         <ImageButton
-            android:id="@+id/camera_button_camera_close"
+            android:id="@+id/camera_button_flip"
+            android:background="@drawable/icon_camera_flip"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:clickable="true"
+            />
+        <ImageButton
+            android:id="@+id/camera_button_capture"
+            android:background="@drawable/icon_camera_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:scaleType="center"
+            android:clickable="true"
+            />
+        <ImageButton
+            android:id="@+id/camera_button_close"
             android:background="@drawable/icon_close"
             android:layout_width="50dp"
             android:layout_height="50dp"

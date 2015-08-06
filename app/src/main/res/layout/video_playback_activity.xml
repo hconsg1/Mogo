@@ -1,54 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    >
+    <RelativeLayout
+        android:id="@+id/playback_upper_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        />
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF">
+    <VideoView
+        android:id="@+id/playback_video_view"
+        android:layout_width="match_parent"
+        android:layout_height="291dp"
+        android:background="#4a4a4a"
+        />
 
-            <VideoView
-                android:id="@+id/playback_video_view"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginTop="100dp" />
-
-    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/playback_progressbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30dp"
+        android:background="#fc4e5e"
+        />
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
+        android:id="@+id/playback_button_wrapper"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center_horizontal"
+        >
 
         <ImageButton
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:id="@+id/imageButton1"
-            android:layout_alignTop="@+id/imageButton3"
+            android:id="@+id/playback_button_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="32dp"
-            android:layout_marginStart="32dp" />
+            android:background="@drawable/icon_playback_check"
+            />
 
         <ImageButton
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:id="@+id/imageButton2"
-            android:layout_alignTop="@+id/imageButton3"
+            android:id="@+id/playback_button_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="44dp"
-            android:layout_marginEnd="44dp" />
-
-        <ImageButton
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:id="@+id/imageButton3"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:background="@drawable/icon_playback_delete"
+            />
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>
+

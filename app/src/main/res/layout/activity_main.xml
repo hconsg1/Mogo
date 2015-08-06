@@ -1,8 +1,10 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    >
 
     <fragment
         android:id="@+id/main_activity_map"
@@ -13,31 +15,36 @@
 
 
     <ScrollView
+        android:id="@+id/main_activity_video_scrollView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/main_activity_video_scrollView"
         android:layout_below="@+id/main_activity_map"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="#4a4a4a">
 
-        <LinearLayout android:id="@+id/main_activity_video_scrollView_wrapper" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="fill_parent" android:background="#0000">
+        <LinearLayout
+            android:id="@+id/main_activity_video_scrollView_wrapper"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:background="#0000">
 
             <!--<LinearLayout android:id="@+id/contentVideo1" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingTop="15px" android:background="#0000">-->
-               <!--<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="#0000">-->
-                    <!--<VideoView android:id="@+id/VideoView1" android:layout_width="match_parent" android:layout_height="200dip"  android:background="#0000"/>-->
-                <!--</LinearLayout>-->
+            <!--<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="#0000">-->
+            <!--<VideoView android:id="@+id/VideoView1" android:layout_width="match_parent" android:layout_height="200dip"  android:background="#0000"/>-->
+            <!--</LinearLayout>-->
             <!--</LinearLayout>-->
             <!--<LinearLayout android:id="@+id/contentVideo2" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingTop="15px" android:background="#FFFFFF">-->
-                <!--<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="#FFFFFF">-->
-                    <!--<VideoView android:id="@+id/VideoView2" android:layout_width="match_parent" android:layout_height="200dip" />-->
-                <!--</LinearLayout>-->
+            <!--<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="#FFFFFF">-->
+            <!--<VideoView android:id="@+id/VideoView2" android:layout_width="match_parent" android:layout_height="200dip" />-->
+            <!--</LinearLayout>-->
             <!--</LinearLayout>-->
 
             <!--<LinearLayout android:id="@+id/contentVideo3" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingTop="15px" android:background="#FFFFFF">-->
-                <!--<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="#FFFFFF">-->
-                    <!--<VideoView android:id="@+id/VideoView3" android:layout_width="match_parent" android:layout_height="200dip" />-->
-                <!--</LinearLayout>-->
+            <!--<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="#FFFFFF">-->
+            <!--<VideoView android:id="@+id/VideoView3" android:layout_width="match_parent" android:layout_height="200dip" />-->
+            <!--</LinearLayout>-->
             <!--</LinearLayout>-->
 
         </LinearLayout>
@@ -45,45 +52,50 @@
 
 
 
-    <RelativeLayout android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:gravity="bottom"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
         android:layout_alignParentBottom="true"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="16dp">
-
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_marginBottom="8dp"
+        >
         <ImageButton
             android:id="@+id/main_activity_start_menu"
             android:layout_width="36dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
-            android:background="@drawable/icon_start_menu"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:background="@drawable/icon_main_menu"
+            android:alpha="0.5"
+            android:clickable="true"
+            />
         <ImageButton
             android:id="@+id/main_activity_start_camera"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:gravity="center_vertical|center"
-            android:layout_gravity="center"
-            android:layout_alignParentTop="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:scaleType="fitCenter"
-            android:layout_alignParentEnd="false"
-            android:background="@drawable/icon_start_camera" />
+            android:layout_centerVertical="true"
+            android:background="@drawable/icon_main_camera"
+            android:clickable="true"
+            android:longClickable="true"
+            />
         <ImageButton
             android:id="@+id/main_activity_start_notification"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
-            android:background="@drawable/icon_start_notification"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:background="@drawable/icon_main_notification"
+            android:alpha="0.5"
+            android:clickable="true"
+            />
     </RelativeLayout>
 
 </RelativeLayout>
