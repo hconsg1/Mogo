@@ -39,7 +39,7 @@
         >
         <ImageButton
             android:id="@+id/camera_button_flip"
-
+            android:background="@drawable/icon_camera_flip"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
@@ -48,7 +48,7 @@
             />
         <ImageButton
             android:id="@+id/camera_button_capture"
-
+            android:background="@drawable/icon_camera_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -58,7 +58,7 @@
             android:clickable="true"
             />
         <ImageButton
-            android:id="@+id/camera_button_camera_close"
+            android:id="@+id/camera_button_close"
             android:background="@drawable/icon_close"
             android:layout_width="50dp"
             android:layout_height="50dp"
