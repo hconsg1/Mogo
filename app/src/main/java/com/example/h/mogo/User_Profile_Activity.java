@@ -1,8 +1,6 @@
 package com.example.h.mogo;
 
-/**
- * Created by USER on 2015-08-05.
- */
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

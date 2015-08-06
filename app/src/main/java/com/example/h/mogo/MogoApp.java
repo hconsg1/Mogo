@@ -1,8 +1,6 @@
 package com.example.h.mogo;
 
-/**
- * Created by USER on 2015-08-05.
- */
+
 import com.parse.Parse;
 import android.app.Application;
 import com.parse.ParseFacebookUtils;
