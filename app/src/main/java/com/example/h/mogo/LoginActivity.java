@@ -57,9 +57,8 @@ public class LoginActivity extends Activity {
         System.out.println("\n\n\n\n\n\n\n2222222222222222222222222222222222222222222222222222222222222222222222222222");
         progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
 
-        List<String> permissions = Arrays.asList("public_profile", "email");
-        // NOTE: for extended permissions, like "user_about_me", your app must be reviewed by the Facebook team
-        // (https://developers.facebook.com/docs/facebook-login/permissions/)
+        List<String> permissions = Arrays.asList("public_profile", "user_friends");
+
         System.out.println("\n\n\n\n\n\n\n3333333333333333333333333333333333333333333333333333333333333333");
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
 

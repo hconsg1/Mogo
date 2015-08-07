@@ -10,7 +10,7 @@ import com.parse.ParseFacebookUtils;
 
 public class Mogo extends Application {
     public void onCreate() {
-        super.onCreate();
+
         // Initialize Facebook
         FacebookSdk.sdkInitialize(getApplicationContext());
 
@@ -20,6 +20,8 @@ public class Mogo extends Application {
 
         //set parse facebook util for facebook user table
         ParseFacebookUtils.initialize(this);
+
+        super.onCreate();
 
     }
 
