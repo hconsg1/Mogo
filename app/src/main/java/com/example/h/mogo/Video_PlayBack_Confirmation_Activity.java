@@ -38,10 +38,11 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
 
         final String path = getIntent().getExtras().getString("file_path");
         final String grid_index = getIntent().getExtras().getString("gridInfo");
-        Log.d("pb","========================"+path+"========================");
+        Log.d("pb", "========================" + path + "========================");
 
         VideoView videoView = (VideoView)findViewById(R.id.playback_video_view);
         videoView.setVideoPath("file://" + path);
+        videoView.setZOrderOnTop(true);
         MediaController mc = new MediaController(Video_PlayBack_Confirmation_Activity.this);
         videoView.setMediaController(mc);
 
