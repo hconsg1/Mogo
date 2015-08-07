@@ -15,10 +15,6 @@ import android.widget.VideoView;
 
 import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -72,20 +68,20 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
     public void uploadVideo(String path, String grid_index){
         String user_id = "";
         //TODO: each video upload needs data about the user
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        if (currentUser.has("profile")) {
-            JSONObject userProfile = currentUser.getJSONObject("profile");
-            try {
-                if (userProfile.has("facebookId")) {
-                    user_id = userProfile.getString("facebookId");
-                } else {
-                    System.out.println("=============USER PROFILE DOES NOT HAVE KEY FACEBOOKID =====================");
-                }
-            }catch (JSONException e) {
-                System.out.println("============= ERROR GETTING USER ID FROM PARSE FACEBOOK BEFORE UPLOADING VIDEO IN VIDEO PLAY BACK ACTIVITY =====================");
-                e.printStackTrace();
-            }
-        }
+        // ParseUser currentUser = ParseUser.getCurrentUser();
+//        if (currentUser.has("profile")) {
+//            JSONObject userProfile = currentUser.getJSONObject("profile");
+//            try {
+//                if (userProfile.has("facebookId")) {
+//                    user_id = userProfile.getString("facebookId");
+//                } else {
+//                    System.out.println("=============USER PROFILE DOES NOT HAVE KEY FACEBOOKID =====================");
+//                }
+//            }catch (JSONException e) {
+//                System.out.println("============= ERROR GETTING USER ID FROM PARSE FACEBOOK BEFORE UPLOADING VIDEO IN VIDEO PLAY BACK ACTIVITY =====================");
+//                e.printStackTrace();
+//            }
+//        }
         File filex = new File(path);
         System.out.println(filex);
         try {
@@ -97,7 +93,8 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
 
             obj.put("firstUpload", file);
             obj.put("grid_index", grid_index);
-            obj.put("creator_id", user_id);
+            //obj.put("creator_id", user_id);
+            obj.put("creator_id", "example_facebook_id_1");
             obj.saveInBackground();
             Log.d("main", "=======SUCCESSUL FILE UPLOAD!!!!======================");
 

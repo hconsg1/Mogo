@@ -11,9 +11,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -70,8 +72,6 @@ public class CameraActivity extends Activity {
                             video_playback_intent.putExtra("gridInfo", grid_info);
                             startActivity(video_playback_intent);
 
-                            //uploadVideo(outPutFilePath);
-
                             isRecording = false;
 
                         } else {
@@ -82,8 +82,14 @@ public class CameraActivity extends Activity {
                                 mMediaRecorder.start();
 
                                 // inform the user that recording has started
-                                //setCaptureButtonText("Stop");
+                                Context context = getApplicationContext();
+                                CharSequence text = "video recording started";
+                                int duration = Toast.LENGTH_SHORT;
+                                Toast toast = Toast.makeText(context, text, duration);
+                                toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+                                toast.show();
                                 isRecording = true;
+
                             } else {
                                 // prepare didn't work, release the camera
                                 releaseMediaRecorder();
