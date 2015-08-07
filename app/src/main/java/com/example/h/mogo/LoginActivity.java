@@ -54,18 +54,23 @@ public class LoginActivity extends Activity {
     }
 
     public void onLoginClick(View v) {
+        System.out.println("\n\n\n\n\n\n\n2222222222222222222222222222222222222222222222222222222222222222222222222222");
         progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
 
         List<String> permissions = Arrays.asList("public_profile", "email");
         // NOTE: for extended permissions, like "user_about_me", your app must be reviewed by the Facebook team
         // (https://developers.facebook.com/docs/facebook-login/permissions/)
-
+        System.out.println("\n\n\n\n\n\n\n3333333333333333333333333333333333333333333333333333333333333333");
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
+
             @Override
             public void done(ParseUser user, ParseException err) {
+                System.out.println("\n\n\n\n\n\n\n44444444444444444444444444444444444444444444444444444");
                 progressDialog.dismiss();
+                System.out.println("\n\n\n\n\n\n\n44444444444444444444444444444444444444444444444444444  AFTER PROCESS DISMISS FUNCION   ");
                 if (user == null) {
                     //Log.d(IntegratingFacebookTutorialApplication.TAG, "Uh oh. The user cancelled the Facebook login.");
+                    System.out.println("================ USER IS NULL  =====================================");
                 } else if (user.isNew()) {
                     //Log.d(IntegratingFacebookTutorialApplication.TAG, "User signed up and logged in through Facebook!");
                     System.out.println("================ NEW USER   LOGGED IN !!!!!!!!! =====================================");
@@ -77,6 +82,7 @@ public class LoginActivity extends Activity {
                 }
             }
         });
+        System.out.println("\n\n\n\n\n\n\n5555555555555555555555555555555555555555555555555555555555555555555555");
     }//end of login click
 
     private void showMainActivity() {
