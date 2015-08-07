@@ -384,7 +384,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                 gpsLocation = location;
                 //I make a log to see the results
                 Log.e("MY CURRENT LOCATION", gpsLocation.toString());
-                current_grid_location = long_lat_info_to_grid_info(gpsLocation.getLongitude(), gpsLocation.getLatitude());
+                current_grid_location = long_lat_info_to_grid_info(gpsLocation.getLatitude(), gpsLocation.getLongitude());
             }
 
             @Override
