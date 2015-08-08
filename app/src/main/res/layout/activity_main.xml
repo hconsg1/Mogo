@@ -7,14 +7,6 @@
     tools:context=".MainActivity"
     >
 
-    <!--
-    <fragment
-        android:id="@+id/main_activity_map"
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="#bada55"/>
--->
     <com.mapbox.mapboxsdk.views.MapView
         android:id="@+id/custommapview"
         android:layout_width="match_parent"
@@ -40,22 +32,7 @@
             android:layout_height="fill_parent"
             android:background="#0000">
 
-            <!--<LinearLayout android:id="@+id/contentVideo1" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingTop="15px" android:background="#0000">-->
-            <!--<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="#0000">-->
-            <!--<VideoView android:id="@+id/VideoView1" android:layout_width="match_parent" android:layout_height="200dip"  android:background="#0000"/>-->
-            <!--</LinearLayout>-->
-            <!--</LinearLayout>-->
-            <!--<LinearLayout android:id="@+id/contentVideo2" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingTop="15px" android:background="#FFFFFF">-->
-            <!--<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="#FFFFFF">-->
-            <!--<VideoView android:id="@+id/VideoView2" android:layout_width="match_parent" android:layout_height="200dip" />-->
-            <!--</LinearLayout>-->
-            <!--</LinearLayout>-->
 
-            <!--<LinearLayout android:id="@+id/contentVideo3" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingTop="15px" android:background="#FFFFFF">-->
-            <!--<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="#FFFFFF">-->
-            <!--<VideoView android:id="@+id/VideoView3" android:layout_width="match_parent" android:layout_height="200dip" />-->
-            <!--</LinearLayout>-->
-            <!--</LinearLayout>-->
 
         </LinearLayout>
     </ScrollView>

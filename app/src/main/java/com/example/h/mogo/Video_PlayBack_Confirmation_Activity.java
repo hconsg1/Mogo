@@ -2,6 +2,7 @@ package com.example.h.mogo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,10 +18,9 @@ import android.widget.VideoView;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 import com.parse.SaveCallback;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,8 +50,16 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("pb","=======================OnClick======================");
-                uploadVideo(path,grid_index);
+                Log.d("pb", "=======================OnClick======================");
+                uploadVideo(path, grid_index);
+            }
+        });
+        ImageButton go_back_button = (ImageButton)findViewById(R.id.playback_button_delete);
+        go_back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Video_PlayBack_Confirmation_Activity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
 

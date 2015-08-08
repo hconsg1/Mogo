@@ -36,7 +36,6 @@ public class LoginActivity extends Activity {
         fb_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("pb", "=======================OnClick======================");
                 onLoginClick(v);
             }
         });
@@ -53,26 +52,20 @@ public class LoginActivity extends Activity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        System.out.println("000000000000000000000000000000000000000000000");
         super.onActivityResult(requestCode, resultCode, data);
         ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
-        System.out.println("111111111111111111111111111111111111111111111");
     }
 
     public void onLoginClick(View v) {
-        System.out.println("\n\n\n\n\n\n\n2222222222222222222222222222222222222222222222222222222222222222222222222222");
         progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
 
         List<String> permissions = Arrays.asList("public_profile", "user_friends","email");
 
-        System.out.println("\n\n\n\n\n\n\n3333333333333333333333333333333333333333333333333333333333333333");
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
 
             @Override
             public void done(ParseUser user, ParseException err) {
-                System.out.println("\n\n\n\n\n\n\n44444444444444444444444444444444444444444444444444444");
                 progressDialog.dismiss();
-                System.out.println("\n\n\n\n\n\n\n44444444444444444444444444444444444444444444444444444  AFTER PROCESS DISMISS FUNCION   ");
                 if (user == null) {
                     //Log.d(IntegratingFacebookTutorialApplication.TAG, "Uh oh. The user cancelled the Facebook login.");
                     System.out.println("================ USER IS NULL  =====================================");
@@ -88,7 +81,6 @@ public class LoginActivity extends Activity {
                 }
             }
         });
-        System.out.println("\n\n\n\n\n\n\n5555555555555555555555555555555555555555555555555555555555555555555555");
     }//end of login click
     private void makeMeRequest() {
         Log.d("vp", "======================makeMeRequest======================");
@@ -97,35 +89,40 @@ public class LoginActivity extends Activity {
                     @Override
                     public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
                         System.out.println("=====================onCompletedMakeMeRequest");
+
                         if (jsonObject != null) {
                             JSONObject userProfile = new JSONObject();
-                            System.out.println(userProfile.toString());
-
+                            System.out.println("\n\n\n\n\n==========================$$$$$$$$$$$$$$$$$$$$===========\n\n\n");
+                            System.out.println(jsonObject.toString());
+                            System.out.println("\n\n\n\n\n==========================$$$$$$$$$$$$$$$$$$$$===========\n\n\n");
 
                             try {
+                                System.out.println("\n\n\n000000000000000000000000000000000000000000000\n\n\n");
                                 userProfile.put("facebookId", jsonObject.getLong("id"));
                                 userProfile.put("name", jsonObject.getString("name"));
+                                System.out.println("\n\n\n111111111111111111111111111111111111\n\n\n");
 
-/*
-
-                                if (jsonObject.getString("gender") != null)
-                                    userProfile.put("gender", jsonObject.getString("gender"));*/
-                          /*   if (jsonObject.getString("email") != null) {
+                                if (jsonObject.has("email")  &&   jsonObject.getString("email") != null) {
+                                    System.out.println("\n\n\n2222222222222222222222222222222222222222222222222\n\n\n");
                                     System.out.println("====================="+jsonObject.getString("email"));
                                     userProfile.put("email", jsonObject.getString("email"));
-                                }*/
+                                }
                                 // Save the user profile info in a user property
+                                System.out.println("\n\n\n33333333333333333333333333333333333333333333\n\n\n");
                                 ParseUser currentUser = ParseUser.getCurrentUser();
+                                System.out.println("\n\n\n444444444444444444444444444444444444444444444444\n\n\n");
                                 currentUser.put("profile", userProfile);
+                                System.out.println("\n\n\n555555555555555555555555555555555555555555555555555\n\n\n");
                                 currentUser.saveInBackground();
+                                System.out.println("\n\n\n66666666666666666666666666666666666666666666666666666\n\n\n");
 
                                 // Show the user info
                                 // user_id = userProfile.getString("facebookId");
                                 Log.d("1","======================="+currentUser+"==========");
                                 Log.d("1","======================="+userProfile+"==========");
                             } catch (JSONException e) {
-                                Log.d("vp",
-                                        "Error parsing returned user data. " + e);
+                                System.out.println("\n\n\n\n\n\n\n\n\n\n\n============ ERROR WHEN GETTING USER PROFILE IN LOGIN ACTIVITY ========================");
+                                e.printStackTrace();
                             }
                         } else if (graphResponse.getError() != null) {
                             switch (graphResponse.getError().getCategory()) {
@@ -147,8 +144,11 @@ public class LoginActivity extends Activity {
                         }
                     }
                 });
-
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,email");
+        request.setParameters(parameters);
         request.executeAsync();
+
     }
     private void showMainActivity() {
         makeMeRequest();
