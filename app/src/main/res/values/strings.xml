@@ -7,4 +7,27 @@
     <string name="title_activity_video_list">VideoList</string>
     <string name="parse_client_key">vLlrTC1DrowiyZJtzURRuSUpI64dOFvoBt1AqRIC</string>
     <string name="parse_app_id">Twc5KQkxtq0yenh2uHBp3GVwfqW48kwKIgLThZvM</string>
+
+
+    <!--custom map-->
+    <!-- Map Labels -->
+    <string name="satellite">Satellite</string>
+    <string name="terrain">Terrain</string>
+    <string name="street">Street</string>
+    <string name="outdoors">Outdoors</string>
+    <string name="woodcut">Woodcut</string>
+    <string name="pencil">Pencil</string>
+    <string name="spaceShip">Space Ship</string>
+
+    <!-- Map Ids -->
+    <string name="satelliteMapId">mapbox.satellite</string>
+    <string name="terrainMapId">mapbox.run-bike-hike</string>
+    <string name="streetMapId">sojoonsup.n475ppdn</string>
+    <string name="outdoorsMapId">mapbox.outdoors</string>
+    <string name="woodcutMapId">examples.xqwfusor</string>
+    <string name="pencilMapId">mapbox.pencil</string>
+    <string name="spaceShipMapId">examples.3hqcl3di</string>
+
+    <!-- Access Token -->
+    <string name="testAccessToken">pk.eyJ1Ijoic29qb29uc3VwIiwiYSI6ImU5MGYyODQ3M2RkNjY1NDE1M2MxMjgyNzg1M2I1NTlmIn0.6xbYJhcTdZvgAj1xwqpelA</string>
 </resources>
