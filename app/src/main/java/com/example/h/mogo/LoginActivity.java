@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -16,6 +17,7 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+import com.squareup.okhttp.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +35,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.login_activity);
 
         LoginButton fb_button = (LoginButton)findViewById(R.id.facebook_login_button);
+        fb_button.setReadPermissions(Arrays.asList("email"));
         fb_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,7 +66,7 @@ public class LoginActivity extends Activity {
         System.out.println("\n\n\n\n\n\n\n2222222222222222222222222222222222222222222222222222222222222222222222222222");
         progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
 
-        List<String> permissions = Arrays.asList("public_profile", "user_friends","email");
+        List<String> permissions = Arrays.asList("public_profile", "user_friends", "email");
 
         System.out.println("\n\n\n\n\n\n\n3333333333333333333333333333333333333333333333333333333333333333");
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
@@ -84,12 +87,17 @@ public class LoginActivity extends Activity {
                 } else {
                     //Log.d(IntegratingFacebookTutorialApplication.TAG, "User logged in through Facebook!");
                     System.out.println("================ LOGGED IN !!!!!!!!! =====================================");
+
                     showMainActivity();
                 }
             }
         });
         System.out.println("\n\n\n\n\n\n\n5555555555555555555555555555555555555555555555555555555555555555555555");
     }//end of login click
+
+    private void makeUserRequest(){
+
+    }
     private void makeMeRequest() {
         Log.d("vp", "======================makeMeRequest======================");
         GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
@@ -99,24 +107,25 @@ public class LoginActivity extends Activity {
                         System.out.println("=====================onCompletedMakeMeRequest");
                         if (jsonObject != null) {
                             JSONObject userProfile = new JSONObject();
-                            System.out.println(userProfile.toString());
+                            System.out.println("====================JSONOBJECT=========");
+                            System.out.println(jsonObject.toString());
 
 
                             try {
                                 userProfile.put("facebookId", jsonObject.getLong("id"));
                                 userProfile.put("name", jsonObject.getString("name"));
 
-/*
+
 
                                 if (jsonObject.getString("gender") != null)
-                                    userProfile.put("gender", jsonObject.getString("gender"));*/
-                          /*   if (jsonObject.getString("email") != null) {
+                                    userProfile.put("gender", jsonObject.getString("gender"));
+                                if (jsonObject.getString("email") != null) {
                                     System.out.println("====================="+jsonObject.getString("email"));
                                     userProfile.put("email", jsonObject.getString("email"));
-                                }*/
-                                // Save the user profile info in a user property
+                                }
+                               // Save the user profile info in a user property
                                 ParseUser currentUser = ParseUser.getCurrentUser();
-                                currentUser.put("profile", userProfile);
+                                currentUser.put("profile", userProfile.toString());
                                 currentUser.saveInBackground();
 
                                 // Show the user info
