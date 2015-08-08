@@ -63,7 +63,7 @@ public class LoginActivity extends Activity {
         System.out.println("\n\n\n\n\n\n\n2222222222222222222222222222222222222222222222222222222222222222222222222222");
         progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
 
-        List<String> permissions = Arrays.asList("public_profile", "user_friends");
+        List<String> permissions = Arrays.asList("public_profile", "user_friends","email");
 
         System.out.println("\n\n\n\n\n\n\n3333333333333333333333333333333333333333333333333333333333333333");
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
@@ -79,6 +79,7 @@ public class LoginActivity extends Activity {
                 } else if (user.isNew()) {
                     //Log.d(IntegratingFacebookTutorialApplication.TAG, "User signed up and logged in through Facebook!");
                     System.out.println("================ NEW USER   LOGGED IN !!!!!!!!! =====================================");
+
                     showMainActivity();
                 } else {
                     //Log.d(IntegratingFacebookTutorialApplication.TAG, "User logged in through Facebook!");
@@ -95,20 +96,24 @@ public class LoginActivity extends Activity {
                 new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+                        System.out.println("=====================onCompletedMakeMeRequest");
                         if (jsonObject != null) {
                             JSONObject userProfile = new JSONObject();
+                            System.out.println(userProfile.toString());
+
 
                             try {
                                 userProfile.put("facebookId", jsonObject.getLong("id"));
                                 userProfile.put("name", jsonObject.getString("name"));
 
+/*
 
-                                /*if (jsonObject.getString("gender") != null)
-                                    userProfile.put("gender", jsonObject.getString("gender"));
-
-                                if (jsonObject.getString("email") != null)
+                                if (jsonObject.getString("gender") != null)
+                                    userProfile.put("gender", jsonObject.getString("gender"));*/
+                          /*   if (jsonObject.getString("email") != null) {
+                                    System.out.println("====================="+jsonObject.getString("email"));
                                     userProfile.put("email", jsonObject.getString("email"));
-*/
+                                }*/
                                 // Save the user profile info in a user property
                                 ParseUser currentUser = ParseUser.getCurrentUser();
                                 currentUser.put("profile", userProfile);

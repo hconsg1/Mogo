@@ -73,9 +73,9 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
         //TODO: each video upload needs data about the user
          ParseUser currentUser = ParseUser.getCurrentUser();
         userProfile = currentUser.getJSONObject("profile");
-      /*  if (currentUser.has("profile")) {
+/*        if (currentUser.has("profile")) {
             userProfile = currentUser.getJSONObject("profile");
-           *//* try {
+            try {
                 if (userProfile.has("facebookId")) {
                     userProfile = userProfile;
                 } else {
@@ -84,7 +84,7 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
             }catch (JSONException e) {
                 System.out.println("============= ERROR GETTING USER ID FROM PARSE FACEBOOK BEFORE UPLOADING VIDEO IN VIDEO PLAY BACK ACTIVITY =====================");
                 e.printStackTrace();
-            }*//*
+            }
         }*/
         File filex = new File(path);
         System.out.println(filex);
@@ -97,16 +97,18 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
 
             obj.put("firstUpload", file);
             obj.put("grid_index", grid_index);
-            obj.put("creator_id", userProfile);
-          //  obj.put("creator_id", "example_facebook_id_1");
-            obj.saveInBackground();
+
+            obj.put("creator_id", userProfile.toString());
+
             Log.d("main", "=======SUCCESSUL FILE UPLOAD!!!!======================");
             //obj.put("creator_id", user_id);
-            obj.put("creator_id", "example_facebook_id_1");
+
             obj.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(com.parse.ParseException e) {
+                    Log.d("v","========================DONE!!!===================");
                     if (e == null) {
+                        Log.d("v","======================SUCCESSFUL===================");
                         Context context = getApplicationContext();
                         CharSequence text = "video uploaded";
                         int duration = Toast.LENGTH_SHORT;
@@ -116,6 +118,8 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
                     } else {
                         Context context = getApplicationContext();
                         CharSequence text = "Failed to upload video please try later";
+                        System.out.println("=====================UPLOAD FAILED!!!===============");
+                        e.printStackTrace();
                         int duration = Toast.LENGTH_SHORT;
 
                         Toast toast = Toast.makeText(context, text, duration);
