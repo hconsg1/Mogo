@@ -22,7 +22,7 @@ public class MapView extends Activity implements OnMapReadyCallback {
         setContentView(R.layout.mapview_activity);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.mapView);
+                .findFragmentById(R.id.custommapview);
         mapFragment.getMapAsync(this);
         Button button= (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
