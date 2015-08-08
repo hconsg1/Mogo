@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.MediaController;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.parse.ParseFile;
@@ -19,6 +20,7 @@ import com.parse.ParseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,9 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class Video_PlayBack_Confirmation_Activity extends Activity {
-
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +101,32 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
           //  obj.put("creator_id", "example_facebook_id_1");
             obj.saveInBackground();
             Log.d("main", "=======SUCCESSUL FILE UPLOAD!!!!======================");
+            //obj.put("creator_id", user_id);
+            obj.put("creator_id", "example_facebook_id_1");
+            obj.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(com.parse.ParseException e) {
+                    if (e == null) {
+                        Context context = getApplicationContext();
+                        CharSequence text = "video uploaded";
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    } else {
+                        Context context = getApplicationContext();
+                        CharSequence text = "Failed to upload video please try later";
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
+                }
+
+            });
+
+
+
 
         }catch (Exception e) {
             e.printStackTrace();
