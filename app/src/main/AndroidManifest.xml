@@ -27,8 +27,6 @@
         android:theme="@style/AppTheme" >
 
 
-
-
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDXd7PA3F_22IVAGJbOpXMjtiWp0EXRcws" />
@@ -67,6 +65,11 @@
 
         <activity
             android:name=".MapView"
+            android:label="@string/title_activity_map_view" >
+        </activity>
+
+        <activity
+            android:name=".VenmoWebViewActivity"
             android:label="@string/title_activity_map_view" >
         </activity>
 
