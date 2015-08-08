@@ -22,7 +22,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -70,6 +69,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     LocationManager locationManager;
     Location gpsLocation;
     private String current_grid_location;
+    final private String venmo_app_secret  = "uAQP3LkE8YENxbCnkdgxEjq73rwTkxLM";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -294,43 +294,43 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         return mediaFile;
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // Image captured and saved to fileUri specified in the Intent
-                System.out.println(data);
-         //       Toast.makeText(this, "Image saved to:\n" +
-        //                data.getData(), Toast.LENGTH_LONG).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                // User cancelled the image capture
-            } else {
-                // Image capture failed, advise user
-            }
-        }
-
-        if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // Video captured and saved to fileUri specified in the Intent
-                System.out.println(data);
-               Toast.makeText(this, "Video saved to:\n" +
-                        data.getData(), Toast.LENGTH_LONG).show();
-                //TODO: video was captured successfully, get the location and upload file here
-                if(gpsLocation != null){
-                    //TODO: we at least have the last location
-                    uploadVideo();
-                }else{
-                    //TODO:GSP location is null we fucked
-                }
-
-            } else if (resultCode == RESULT_CANCELED) {
-                // User cancelled the video capture
-            } else {
-                // Video capture failed, advise user
-            }
-        }
-    }
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+//            if (resultCode == RESULT_OK) {
+//                // Image captured and saved to fileUri specified in the Intent
+//                System.out.println(data);
+//         //       Toast.makeText(this, "Image saved to:\n" +
+//        //                data.getData(), Toast.LENGTH_LONG).show();
+//            } else if (resultCode == RESULT_CANCELED) {
+//                // User cancelled the image capture
+//            } else {
+//                // Image capture failed, advise user
+//            }
+//        }
+//
+//        if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
+//            if (resultCode == RESULT_OK) {
+//                // Video captured and saved to fileUri specified in the Intent
+//                System.out.println(data);
+//               Toast.makeText(this, "Video saved to:\n" +
+//                        data.getData(), Toast.LENGTH_LONG).show();
+//                //TODO: video was captured successfully, get the location and upload file here
+//                if(gpsLocation != null){
+//                    //TODO: we at least have the last location
+//                    uploadVideo();
+//                }else{
+//                    //TODO:GSP location is null we fucked
+//                }
+//
+//            } else if (resultCode == RESULT_CANCELED) {
+//                // User cancelled the video capture
+//            } else {
+//                // Video capture failed, advise user
+//            }
+//        }
+//    }
 
     public String long_lat_info_to_grid_info(double latitude , double longitude){
         String grid_index;
@@ -524,5 +524,40 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 //        return new ArrayList<Marker>();
 //    }
 
+    public void start_payment_activity(String recipient_info, String amount, String note, String txn){
+
+        Intent venmoIntent = VenmoLibrary.openVenmoPayment("2843", "Mogo", recipient_info, amount, note, txn);
+        startActivityForResult(venmoIntent, 1);
+
+        return;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        switch(requestCode) {
+            case 1: {
+                if(resultCode == RESULT_OK) {
+                    String signedrequest = data.getStringExtra("signedrequest");
+                    if(signedrequest != null) {
+                        VenmoLibrary.VenmoResponse response = (new VenmoLibrary()).validateVenmoPaymentResponse(signedrequest, venmo_app_secret);
+                        if(response.getSuccess().equals("1")) {
+                            //Payment successful.  Use data from response object to display a success message
+                            String note = response.getNote();
+                            String amount = response.getAmount();
+                        }
+                    }
+                    else {
+                        String error_message = data.getStringExtra("error_message");
+                        //An error ocurred.  Make sure to display the error_message to the user
+                    }
+                }
+                else if(resultCode == RESULT_CANCELED) {
+                    //The user cancelled the payment
+                }
+                break;
+            }
+        }
+    }//end of on result
 
 }//end of main activity class

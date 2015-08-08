@@ -105,6 +105,7 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
                     } else {
+
                         Context context = getApplicationContext();
                         CharSequence text = "Failed to upload video please try later";
                         int duration = Toast.LENGTH_SHORT;
