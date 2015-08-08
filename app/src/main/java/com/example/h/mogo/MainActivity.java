@@ -46,6 +46,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.mapbox.mapboxsdk.api.ILatLng;
+import com.mapbox.mapboxsdk.geometry.BoundingBox;
+import com.mapbox.mapboxsdk.overlay.Icon;
+import com.mapbox.mapboxsdk.overlay.UserLocationOverlay;
+import com.mapbox.mapboxsdk.tileprovider.tilesource.*;
+import com.mapbox.mapboxsdk.views.MapView;
+import com.mapbox.mapboxsdk.views.util.TilesLoadedListener;
+
+
 public class MainActivity extends Activity implements OnMapReadyCallback {
 
     public static final String LOGTAG = "VIDEOCAPTURE";
@@ -71,6 +80,10 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     Location gpsLocation;
     private String current_grid_location;
 
+    private MapView mv;
+    private UserLocationOverlay myLocationOverlay;
+    private String currentMap = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,11 +91,22 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
        // getLocation();
         setContentView(R.layout.activity_main);
 
+        //Custom Map
+        mv = (MapView) findViewById(R.id.custommapview);
+        mv.setMinZoomLevel(mv.getTileProvider().getMinimumZoomLevel());
+        mv.setMaxZoomLevel(mv.getTileProvider().getMaximumZoomLevel());
+        mv.setCenter(mv.getTileProvider().getCenterCoordinate());
+        mv.setZoom(0);
+        currentMap = getString(R.string.streetMapId);
 
+        // Show user location (purposely not in follow mode)
+        mv.setUserLocationEnabled(true);
 
+        mv.loadFromGeoJSONURL("https://gist.githubusercontent.com/tmcw/10307131/raw/21c0a20312a2833afeee3b46028c3ed0e9756d4c/map.geojson");
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.main_activity_map);
-        mapFragment.getMapAsync(this);
+//        //original map
+//        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.main_activity_map);
+//        mapFragment.getMapAsync(this);
 
 
 
@@ -96,6 +120,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                 video_record_intent.putExtra("location",long_lat_info_to_grid_info(gpsLocation.getLatitude(),gpsLocation.getLongitude()));
 
                 MainActivity.this.startActivity(video_record_intent);
+
+                overridePendingTransition(R.anim.animation_open_camera, R.anim.animation_close_camera);
             }
         });
 
