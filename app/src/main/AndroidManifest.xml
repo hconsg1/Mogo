@@ -26,9 +26,7 @@
         android:name=".Mogo"
         android:theme="@style/AppTheme" >
 
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="1058044627548170" />
+
 
 
         <meta-data
@@ -44,7 +42,11 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
 
@@ -52,11 +54,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
 
@@ -77,15 +75,15 @@
             android:label="mogo" >
         </activity>
 
-        <!--<meta-data-->
-            <!--android:name="com.parse.APPLICATION_ID"-->
-            <!--android:value="@string/parse_app_id" />-->
-        <!--<meta-data-->
-            <!--android:name="com.parse.CLIENT_KEY"-->
-            <!--android:value="@string/parse_client_key" />-->
-        <!--<meta-data-->
-            <!--android:name="com.facebook.sdk.ApplicationId"-->
-            <!--android:value="@string/facebook_app_id"/>-->
+        <meta-data
+            android:name="com.parse.APPLICATION_ID"
+            android:value="@string/parse_app_id" />
+        <meta-data
+            android:name="com.parse.CLIENT_KEY"
+            android:value="@string/parse_client_key" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
     </application>
 
 </manifest>

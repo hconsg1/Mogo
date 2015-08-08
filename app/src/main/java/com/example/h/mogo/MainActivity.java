@@ -332,7 +332,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         }
     }
 
-    public String long_lat_info_to_grid_info(double longitude, double latitude){
+    public String long_lat_info_to_grid_info(double latitude , double longitude){
         String grid_index;
         //TODO: THIS IS THE MOST IMPORTANT ALGORITHM PART WHERE WE TRANSLATE LONG/ LAT INFO TO GRID LOCATION IN DB
         //HARD CODED FOR NOW
