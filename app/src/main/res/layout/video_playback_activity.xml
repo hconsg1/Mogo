@@ -8,18 +8,19 @@
     <RelativeLayout
         android:id="@+id/playback_upper_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="255dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        />
+        >
 
-    <VideoView
-        android:id="@+id/playback_video_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#4a4a4a"
-        />
+        <VideoView
+            android:id="@+id/playback_video_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#4a4a4a"
+            android:layout_weight="0.43"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/playback_progressbar"

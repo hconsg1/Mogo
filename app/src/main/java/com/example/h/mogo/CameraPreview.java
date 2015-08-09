@@ -152,4 +152,3 @@ public class CameraPreview  extends SurfaceView implements SurfaceHolder.Callbac
 
 }//end of camera preview class
 
-

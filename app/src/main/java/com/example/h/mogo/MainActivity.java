@@ -16,15 +16,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.MotionEvent;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -33,11 +27,6 @@ import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
-
-import android.widget.Button;
-import android.widget.EditText;
-import android.graphics.Color;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -45,8 +34,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.mapbox.mapboxsdk.overlay.UserLocationOverlay;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -130,14 +117,14 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         //startCamera();
 
         //Button   Notification
-        ImageButton notibutton = (ImageButton) findViewById(R.id.main_activity_start_notification);
-        button.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view) {
-                Intent open_notification_intent = new Intent(MainActivity.this, NotificationActivity.class);
-                MainActivity.this.startActivity(open_notification_intent);
-                overridePendingTransition(R.anim.animation_open_camera, R.anim.animation_close_camera);
-            }
-        });
+//        ImageButton notibutton = (ImageButton) findViewById(R.id.main_activity_start_notification);
+//        button.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View view) {
+//                Intent open_notification_intent = new Intent(MainActivity.this, NotificationActivity.class);
+//                MainActivity.this.startActivity(open_notification_intent);
+//                overridePendingTransition(R.anim.animation_open_camera, R.anim.animation_close_camera);
+//            }
+//        });
 
         //dispatchTakeVideoIntent();
 
@@ -242,10 +229,11 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
                         video.setLayoutParams(new FrameLayout.LayoutParams((width - 1), (width - 1)));
 
-
                         HorizontalScrollView horScroll = new HorizontalScrollView(MainActivity.this);
+                        horScroll.setLayoutParams(new FrameLayout.LayoutParams((width - 1), (width - 1)));
+
                         RelativeLayout relativeLayout = new RelativeLayout(MainActivity.this);
-                        relativeLayout.setMinimumWidth(300);
+                        relativeLayout.setMinimumWidth(400);
                         relativeLayout.setBackgroundColor(Color.RED);
                         relativeLayout.setMinimumHeight(video.getMeasuredHeight());
                         LinearLayout topLinearLayout = new LinearLayout(MainActivity.this);

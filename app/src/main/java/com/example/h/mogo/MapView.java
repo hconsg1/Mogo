@@ -4,8 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +28,11 @@ public class MapView extends Activity implements OnMapReadyCallback, GoogleMap.O
     ArrayList<Marker> _visibleMarkers;
     private double mylat;
     private double mylong;
+    private View popupView;
+    private PopupWindow popupWindow;
+    private boolean popup_show = false;
+    private View map_fragment_element;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -34,7 +43,7 @@ public class MapView extends Activity implements OnMapReadyCallback, GoogleMap.O
         setContentView(R.layout.mapview_activity);
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapview_map);
         mapFragment.getMapAsync(this);
-
+        map_fragment_element =  findViewById(R.id.mapview_map);
 
         ImageButton back_button= (ImageButton) findViewById(R.id.mapview_back_button);
         back_button.setOnClickListener(new View.OnClickListener() {
@@ -73,8 +82,23 @@ public class MapView extends Activity implements OnMapReadyCallback, GoogleMap.O
     @Override
     public void onMapLongClick(LatLng latLng) {
         //TODO: popup with 2 options
-        // pop up request
-        // go to main feed with that location
+
+        // if popup of already showing then close and create new one
+        if(popup_show){
+            popupWindow.dismiss();
+            popup_show = false;
+        }
+
+        //create new one popup
+        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        popupView = layoutInflater.inflate(R.layout.mapview_popup, null);
+
+        popupWindow = new PopupWindow(popupView,
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        popupWindow.showAtLocation(map_fragment_element, Gravity.NO_GRAVITY, 0, 0 );
+        popup_show = true;
+
 
     }
 }//end of class

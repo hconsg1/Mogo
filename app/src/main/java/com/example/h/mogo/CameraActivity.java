@@ -48,7 +48,6 @@ public class CameraActivity extends Activity {
         // Create an instance of Camera
         mCamera = getCameraInstance();
         mCamera.setDisplayOrientation(90);
-        Camera.Parameters camera_parameter = mCamera.getParameters();
 
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
@@ -128,7 +127,7 @@ public class CameraActivity extends Activity {
                 }
         ); // end of set onclick listener for CAPTUURE START VIDEO BUTTON
 
-        mCamera.setFaceDetectionListener(new Camera_Face_Detection_Listener());
+        //mCamera.setFaceDetectionListener(new Camera_Face_Detection_Listener());
 
     }// end of on create for camera activity
 
@@ -225,9 +224,6 @@ public class CameraActivity extends Activity {
     private boolean prepareVideoRecorder(){
 
         //mCamera = getCameraInstance();
-        System.out.println("=================== PRINTING CAMERA INSTANCE ======================");
-        System.out.println(mCamera);
-        System.out.println("================  END ========================");
         mMediaRecorder = new MediaRecorder();
 
         // Step 1: Unlock and set camera to MediaRecorder
