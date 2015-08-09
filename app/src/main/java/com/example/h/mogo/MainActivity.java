@@ -36,7 +36,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.mapbox.mapboxsdk.overlay.UserLocationOverlay;
-import com.mapbox.mapboxsdk.views.MapView;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -81,7 +80,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
     private String current_grid_location;
     final private String venmo_app_secret  = "uAQP3LkE8YENxbCnkdgxEjq73rwTkxLM";
 
-    private GoogleMap mv;
     private UserLocationOverlay myLocationOverlay;
     private String currentMap = null;
     private GestureDetector gestureDetector;
@@ -89,14 +87,10 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-       // getLocation();
+        getLocation();
         setContentView(R.layout.activity_main);
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.main_activity_map);
         mapFragment.getMapAsync(this);
-
-
-
-
 
 
 
@@ -277,7 +271,10 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
     @Override
     public void onMapLongClick(LatLng point) {
-        System.out.println("\n\n\n HELL YEAH \n\n\n\n");
+        Intent intent = new Intent(MainActivity.this, MapView.class);
+        intent.putExtra("lat", gpsLocation.getLatitude());
+        intent.putExtra("lon", gpsLocation.getLongitude());
+        startActivity(intent);
     }
 
 
