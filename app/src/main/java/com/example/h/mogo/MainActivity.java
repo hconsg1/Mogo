@@ -1,6 +1,5 @@
 package com.example.h.mogo;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -21,12 +20,6 @@ import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
-import android.view.ViewGroup;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.MotionEvent;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -39,7 +32,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -145,6 +137,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         notibutton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
                 Intent open_notification_intent = new Intent(MainActivity.this, NotificationActivity.class);
+                open_notification_intent.putExtra("grid_info", current_grid_location);
                 startActivity(open_notification_intent);
                 overridePendingTransition(R.anim.animation_push_left_in, R.anim.animation_push_left_out);
             }
