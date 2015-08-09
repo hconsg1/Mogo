@@ -1,6 +1,5 @@
 package com.example.h.mogo;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -22,16 +21,6 @@ import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
-import android.view.ViewGroup;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.MotionEvent;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
-import android.app.TabActivity;
-import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -44,7 +33,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -55,6 +43,10 @@ import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -130,14 +122,13 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
 
-        //uploadVideo();
-        //startCamera();
 
         //Button  Open Notification
         ImageButton notibutton = (ImageButton) findViewById(R.id.main_activity_start_notification);
         notibutton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
                 Intent open_notification_intent = new Intent(MainActivity.this, NotificationActivity.class);
+                open_notification_intent.putExtra("grid_info", current_grid_location);
                 startActivity(open_notification_intent);
                 overridePendingTransition(R.anim.animation_push_left_in, R.anim.animation_push_left_out);
             }
@@ -256,6 +247,15 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
                     for (ParseObject object : list) {
                         url = getVideoUrl(object);
                         Log.d("main", getVideoUrl(object));
+                        ParseUser user = ParseUser.getCurrentUser();
+                        String json = user.getString("Profile");
+//                        JSONObject obj = null;
+//                        try {
+//                            obj = (JSONObject)(new JSONParser().parse(json));
+//                        } catch (org.json.simple.parser.ParseException e1) {
+//                            e1.printStackTrace();
+//                        }
+
                         LinearLayout scroll_view = (LinearLayout) findViewById(R.id.main_activity_video_scrollView_wrapper);
                         int width = scroll_view.getWidth();
 
@@ -263,7 +263,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
                         //set tag for each appended videos => the tags are EQUAL to object ID in DATABASE
                         String video_object_id = object.getObjectId();
-                        ParseGeoPoint video_location = object.getParseGeoPoint("geoPoint");
+                        final ParseGeoPoint video_location = object.getParseGeoPoint("geoPoint");
                         ArrayList<Object> array_object = new ArrayList<Object>();
                         array_object.add(video_object_id);
                         array_object.add(video_location);
@@ -271,6 +271,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
                         MediaController mc = new MediaController(MainActivity.this);
                         video.setMediaController(mc);
                         video.setVideoPath(url);
+
                         mc.setMinimumWidth(video.getMeasuredWidth());
                         mc.setAnchorView(video);
 
@@ -300,20 +301,35 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
                         topLinearLayout.addView(video);
                         topLinearLayout.addView(swipeView);
 
+                        topLinearLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                main_activity_map.addMarker(new MarkerOptions()
+                                        .position(new LatLng(video_location.getLatitude(), video_location.getLongitude())));
+
+                            }
+                        });
+
                         ImageButton button_like = new ImageButton(MainActivity.this);
                         button_like.setBackgroundResource(R.drawable.icon_like);
 //                        button_like.setId(View.generateViewId());
 
-                        ImageButton button_pay = new ImageButton(MainActivity.this);
+                        final ImageButton button_pay = new ImageButton(MainActivity.this);
                         button_pay.setBackgroundResource(R.drawable.icon_pay);
-                        params2.addRule(RelativeLayout.BELOW,button_like.getId());
+                        params2.addRule(RelativeLayout.BELOW, button_like.getId());
 
                         swipeView.addView(button_like, params1);
                         swipeView.addView(button_pay, params2);
 
 
 
+                        button_pay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                start_payment_activity("hong_jun_choi@brown.edu", "5", "hackathon" );
 
+                            }
+                        });
                         //TODO: should i do other stuff like focus?
                     }
 
@@ -606,11 +622,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 //        Log.d("tag","===================set Marker==============================");
 //        LatLng loc1 = new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
 //        Log.d("tag",loc1.toString());
-//        Marker marker1 = main_activity_map.addMarker(new MarkerOptions()
-//                .title("my current location")
-//                .snippet("click this button to show all videos around you!")
-//                .position(loc1));
-//
+//        Marker marker1 = main_activity_map.
 //        main_activity_map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 //            @Override
 //            public boolean onMarkerClick(Marker marker) {

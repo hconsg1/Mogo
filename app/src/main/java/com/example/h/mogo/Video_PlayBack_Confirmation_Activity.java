@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -27,6 +30,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Locale;
 
 public class Video_PlayBack_Confirmation_Activity extends Activity {
 
@@ -40,6 +45,24 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
         final String path = getIntent().getExtras().getString("file_path");
         final String grid_index = getIntent().getExtras().getString("gridInfo");
         final String geoPoint = getIntent().getExtras().getString("geoPoint");
+
+        TextView textView = (TextView)findViewById(R.id.text1);
+        Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geoCoder.getFromLocation(parseGeoString(geoPoint).getLatitude(),parseGeoString(geoPoint).getLongitude(), 1);
+
+            String add = "";
+            if (addresses.size() > 0)
+            {
+                for (int i=0; i<addresses.get(0).getMaxAddressLineIndex();i++)
+                    add += addresses.get(0).getAddressLine(i) + "\n";
+            }
+
+            textView.setText(add);
+        }
+        catch (IOException e1) {
+            e1.printStackTrace();
+        }
 
 
         VideoView videoView = (VideoView)findViewById(R.id.playback_video_view);
@@ -113,7 +136,9 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
             file.saveInBackground();
 
             ParseObject obj = new ParseObject("VideoUploadX");
-
+/*
+            geoPoint = new ParseGeoPoint(40.6892,-74.0444);
+            grid_index = long_lat_info_to_grid_info(40.6892,-74.0444);*/
             obj.put("firstUpload", file);
             obj.put("grid_index", grid_index);
             obj.put("geoPoint", geoPoint);
@@ -158,7 +183,15 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
             System.out.print("======error in file upload function in main activity ===============");
         }
     }
-
+    public String long_lat_info_to_grid_info(double latitude , double longitude){
+        String grid_index;
+        //TODO: THIS IS THE MOST IMPORTANT ALGORITHM PART WHERE WE TRANSLATE LONG/ LAT INFO TO GRID LOCATION IN DB
+        //HARD CODED FOR NOW
+        int x_grid = (int)(longitude* 1000);
+        int y_grid = (int)(latitude* 1000);
+        grid_index  = Integer.toString(x_grid) + '_' + Integer.toString(y_grid);
+        return grid_index;
+    }
     public static byte[] getBytesFromFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);
 
