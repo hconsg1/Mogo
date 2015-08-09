@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Mogo</string>
-    <string name ="facebook_app_id">867608409941636</string>
+    <string name ="facebook_app_id">1058044627548170</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_map_view">MapView</string>

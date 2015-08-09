@@ -35,13 +35,16 @@ public class CameraActivity extends Activity {
     private String outPutFilePath;
     private ImageButton capture_button;
     String grid_info;
+    String geoPoint;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_preview);
         grid_info = getIntent().getExtras().getString("location");
-        System.out.println("=============="+grid_info+"=====================");
+        geoPoint = getIntent().getExtras().getString("geoPoint");
+
         // Create an instance of Camera
         mCamera = getCameraInstance();
         mCamera.setDisplayOrientation(90);
@@ -54,7 +57,7 @@ public class CameraActivity extends Activity {
 
         // Add a listener to the Capture button
         capture_button = (ImageButton) findViewById(R.id.camera_button_capture);
-        capture_button.setBackgroundResource(R.drawable.default);
+        capture_button.setBackgroundResource(R.drawable.icon_start_camera);
         capture_button.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -73,6 +76,7 @@ public class CameraActivity extends Activity {
                             Intent video_playback_intent = new Intent(CameraActivity.this, Video_PlayBack_Confirmation_Activity.class);
                             video_playback_intent.putExtra("file_path", outPutFilePath);
                             video_playback_intent.putExtra("gridInfo", grid_info);
+                            video_playback_intent.putExtra("geoPoint", geoPoint);
                             startActivity(video_playback_intent);
 
                             isRecording = false;
@@ -91,7 +95,7 @@ public class CameraActivity extends Activity {
                                 CharSequence text = "video recording started";
                                 int duration = Toast.LENGTH_SHORT;
                                 Toast toast = Toast.makeText(context, text, duration);
-                                toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+                                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                                 toast.show();
                                 isRecording = true;
 
@@ -103,7 +107,26 @@ public class CameraActivity extends Activity {
                         }
                     }
                 }
-        );
+        ); // end of set onclick listener for CAPTUURE START VIDEO BUTTON
+
+        ImageButton close_button= (ImageButton) findViewById(R.id.camera_button_close);
+        close_button.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO: stop the video and go back to main activity
+                        if (isRecording) {
+                            // stop recording and release camera
+                            mMediaRecorder.stop();  // stop the recording
+                            releaseMediaRecorder(); // release the MediaRecorder object
+                            mCamera.lock();         // take camera access back from MediaRecorder
+                        }
+
+                        Intent intent = new Intent(CameraActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                }
+        ); // end of set onclick listener for CAPTUURE START VIDEO BUTTON
 
         mCamera.setFaceDetectionListener(new Camera_Face_Detection_Listener());
 

@@ -1,113 +1,80 @@
 package com.example.h.mogo;
-import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.*;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MapView extends Activity implements OnMapReadyCallback {
+public class MapView extends Activity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
-    GoogleMap _map;
+    private GoogleMap mapview_map;
+    private Location gpsLocation;
     ArrayList<Marker> _visibleMarkers;
-
+    private double mylat;
+    private double mylong;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.mapview_activity);
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.custommapview);
+        super.onCreate(savedInstanceState);
+
+         mylat = this.getIntent().getExtras().getDouble("lat");
+         mylong  = this.getIntent().getExtras().getDouble("lon");
+        setContentView(R.layout.mapview_activity);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapview_map);
         mapFragment.getMapAsync(this);
-        Button button= (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+
+
+        ImageButton back_button= (ImageButton) findViewById(R.id.mapview_back_button);
+        back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MapView.this, VideoList.class);
-              //  intent.putExtra("markerList",_visibleMarkers );
+                Intent intent = new Intent(MapView.this, MainActivity.class);
+                //  intent.putExtra("markerList",_visibleMarkers );
                 startActivity(intent);
             }
         });
+    }//end of on create
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mapview_map = googleMap;
+
+        mapview_map.setOnMapLongClickListener(this);
+        //final ArrayList<Marker> markerArray = setMarker();
+        //ArrayList<Marker> boundedList = getBoundedMarkers(markerArray);
+
+        LatLng currentLoc = new LatLng(mylat, mylong);
+
+        mapview_map.setMyLocationEnabled(true);
+        mapview_map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 13));
+        mapview_map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+//                Log.d("m","=====================camera move=====================");
+//                System.out.println(getBoundedMarkers(markerArray));
+            }
+        });
+
     }
 
     @Override
-    public void onMapReady(GoogleMap map) {
-        _map = map;
-        final ArrayList<Marker> markerArray = setMarker();
-        LatLng currentLoc = new LatLng(41.8262, -71.4032);
-        ArrayList<Marker> boundedList = getBoundedMarkers(markerArray);
-
-        _map.setMyLocationEnabled(true);
-        _map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 13));
-        _map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-                Log.d("m","=====================camera move=========");
-                System.out.println(getBoundedMarkers(markerArray));
-            }
-        });
-
-
-        Log.d("tag","=============map ready==============");
-
-
-
-        System.out.println(boundedList);
-    }
-
-    public ArrayList<Marker> getBoundedMarkers(ArrayList<Marker> markerArray){
-        ArrayList<Marker> markerList = new ArrayList<>();
-        for (Marker marker : markerArray){
-            if (isVisibleOnMap(marker.getPosition())){
-                markerList.add(marker);
-            }
-        }
-        _visibleMarkers = markerList;
-        return markerList;
-
+    public void onMapLongClick(LatLng latLng) {
+        //TODO: popup with 2 options
+        // pop up request
+        // go to main feed with that location
 
     }
-
-    public boolean isVisibleOnMap(LatLng latLng) {
-        VisibleRegion vr = _map.getProjection().getVisibleRegion();
-        return vr.latLngBounds.contains(latLng);
-    }
-
-    public ArrayList<Marker> setMarker(){
-        //setMarkers , return Marker array
-        LatLng loc1 = new LatLng(41.8262, -71.4034);
-        LatLng loc2 = new LatLng(41.8258, -71.4078);
-        Marker marker1 = _map.addMarker(new MarkerOptions()
-                .title("Sydney")
-                .snippet("The most populous city in Australia.")
-                .position(loc1));
-
-        Marker marker2 = _map.addMarker(new MarkerOptions()
-                .title("Sydney")
-                .snippet("The most populous city in Australia.")
-                .position(loc2));
-        _map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Intent intent = new Intent(MapView.this, MyVideoView.class);
-                startActivity(intent);
-                return false;
-            }
-        });
-
-        ArrayList<Marker> markerList = new ArrayList<Marker>();
-
-        markerList.add(marker1);
-        markerList.add(marker2);
-        return markerList;
-    }
-
-
-
-
-}
+}//end of class

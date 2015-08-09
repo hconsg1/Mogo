@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.location.Location;
 import android.location.LocationListener;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -24,9 +26,11 @@ import android.view.MotionEvent;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 
@@ -41,8 +45,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.mapbox.mapboxsdk.overlay.UserLocationOverlay;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
@@ -56,18 +65,7 @@ import java.util.Date;
 import java.util.List;
 
 
-
-import com.mapbox.mapboxsdk.api.ILatLng;
-import com.mapbox.mapboxsdk.geometry.BoundingBox;
-import com.mapbox.mapboxsdk.overlay.Icon;
-import com.mapbox.mapboxsdk.overlay.UserLocationOverlay;
-import com.mapbox.mapboxsdk.tileprovider.tilesource.*;
-import com.mapbox.mapboxsdk.views.MapView;
-import com.mapbox.mapboxsdk.views.util.TilesLoadedListener;
-import com.mapbox.mapboxsdk.tileprovider.tilesource.ITileLayer;
-
-
-public class MainActivity extends Activity implements OnMapReadyCallback {
+public class MainActivity extends Activity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     public static final String LOGTAG = "VIDEOCAPTURE";
     public static final int MEDIA_TYPE_IMAGE = 1;
@@ -93,49 +91,29 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     private String current_grid_location;
     final private String venmo_app_secret  = "uAQP3LkE8YENxbCnkdgxEjq73rwTkxLM";
 
-    //Map
-    private MapView mv;
-    private UserLocationOverlay myLocationOverlay;
-    private String currentMap = null;
-
-    //Swipe to interact
-    GestureDetector detector;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-       // getLocation();
+        getLocation();
         setContentView(R.layout.activity_main);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.main_activity_map);
+        mapFragment.getMapAsync(this);
 
-        //Custom Map
-        mv = (MapView) findViewById(R.id.custommapview);
-        mv.setMinZoomLevel(mv.getTileProvider().getMinimumZoomLevel());
-        mv.setMaxZoomLevel(mv.getTileProvider().getMaximumZoomLevel());
-        mv.setCenter(mv.getTileProvider().getCenterCoordinate());
-        mv.setZoom(15);
-        currentMap = getString(R.string.streetMapId);
-        MapView.setTileSource(new MapboxTileLayer("sojoonsup.n475ppdn"));
-
-        // Show user location (purposely not in follow mode)
-        mv.setUserLocationEnabled(true);
-
-//        //draw path
-//        mv.loadFromGeoJSONURL("https://gist.githubusercontent.com/tmcw/10307131/raw/21c0a20312a2833afeee3b46028c3ed0e9756d4c/map.geojson");
-
-//        //original map
-//        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.main_activity_map);
-//        mapFragment.getMapAsync(this);
 
 
         //TODO: THIS BUTTON SHOULD BE THE MAP ITSELF : WHEN USER DRAGS OVER MAP THEN NEW ACTIVITY BY EXPANSION
         ImageButton button = (ImageButton) findViewById(R.id.main_activity_start_camera);
+
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 //TODO: start camera preview activity NEEDS TO BE CHANGED
-               //start camera preview activity
+                //start camera preview activity
                 Intent video_record_intent = new Intent(MainActivity.this, CameraActivity.class);
-                video_record_intent.putExtra("location",long_lat_info_to_grid_info(gpsLocation.getLatitude(),gpsLocation.getLongitude()));
+
+                video_record_intent.putExtra("location", long_lat_info_to_grid_info(gpsLocation.getLatitude(), gpsLocation.getLongitude()));
+                video_record_intent.putExtra("geoPoint", gpsLocation.getLatitude() + "///" + gpsLocation.getLongitude());
+
 
                 MainActivity.this.startActivity(video_record_intent);
 
@@ -144,10 +122,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         });
 
 
-        File path = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
 
-        Log.d("pth", path.getAbsolutePath());
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
 
         //uploadVideo();
@@ -159,7 +135,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
             public void onClick(View view) {
                 Intent open_notification_intent = new Intent(MainActivity.this, NotificationActivity.class);
                 MainActivity.this.startActivity(open_notification_intent);
-                overridePendingTransition(R.anim.animation_push_left, R.anim.animation_push_right);
+                overridePendingTransition(R.anim.animation_open_camera, R.anim.animation_close_camera);
             }
         });
 
@@ -167,6 +143,27 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
 
     }//end of oncreate function of main activity
+
+
+
+
+
+    public void addLike(String objectId){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("videoUploadX");
+        query.getInBackground(objectId, new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    int num_likes = object.getInt("num_like");
+                    object.put("num_like", num_likes++);
+                    object.saveInBackground();
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
 
     public String getVideoUrl(ParseObject object){
         ParseFile videoFile = (ParseFile)object.get("firstUpload");
@@ -176,16 +173,30 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
             myurl = videoFile.getUrl();
 
         }catch(Exception e){
-            System.out.println("parseException");
-            System.out.println("===============================ERROR =======================");
+            System.out.println("===============================ERROR IN GET VIDEO URL =======================");
             e.printStackTrace();
         }
         return myurl;
     }
 
+    //TODO: get which button HOT OR NEW is clicked so that we can figure out which videos to put into the feed
+    public String  get_hot_or_new(){
 
+        //        if(  ){
+        //            return "hot";
+        //        }else{
+        //            return "new";
+        //        }
+
+
+        return "hot";
+    }
+
+
+    //TODO: need to put LIMIT on the number of video being fetched. ALSO LOAD MORE VIDEO functionality has to be implemented
     public void get_new_video_feed(String grid_info){
         System.out.println("=======================  starting get new video feed function ============================");
+
         //TODO: delete everything in the scroll view
         LinearLayout scroll_view = (LinearLayout) findViewById(R.id.main_activity_video_scrollView_wrapper);
         scroll_view.removeAllViews();
@@ -193,16 +204,18 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         //TODO: get all the video with the same grid index from parse and set the url of the videos to each of them
         List<ParseObject> objectList;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("VideoUploadX");
-
-        //TODO: change variable grid_info to actual grid of current location of the user
-
-
         query.whereEqualTo("grid_index", grid_info);
+
+        if(get_hot_or_new() == "new"){
+            query.orderByAscending("createdAt");
+        }else{
+            query.orderByAscending("num_like");
+        }
+
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> list, com.parse.ParseException e) {
                 if (e == null) {
                     //TODO: SUCCESS
-                    Log.d("main","================received Parse Objects======");
                     String url = "";
                     //TODO: loop through query returned objects
                     for (ParseObject object : list) {
@@ -212,18 +225,47 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                         int width = scroll_view.getWidth();
 
                         VideoView video = new VideoView(MainActivity.this);
-                        video.setVideoPath(url);
 
-                        video.setLayoutParams(new FrameLayout.LayoutParams((width-1), (width-1)));
-                        scroll_view.addView(video);
+                        //set tag for each appended videos => the tags are EQUAL to object ID in DATABASE
+                        String video_object_id = object.getObjectId();
+                        ParseGeoPoint video_location = object.getParseGeoPoint("geoPoint");
+                        ArrayList<Object> array_object = new ArrayList<Object>();
+                        array_object.add(video_object_id);
+                        array_object.add(video_location);
+                        video.setTag(array_object);
                         MediaController mc = new MediaController(MainActivity.this);
                         video.setMediaController(mc);
+                        video.setVideoPath(url);
+                        mc.setMinimumWidth(video.getMeasuredWidth());
+                        mc.setAnchorView(video);
+
+
+                        video.setLayoutParams(new FrameLayout.LayoutParams((width - 1), (width - 1)));
+
+
+                        HorizontalScrollView horScroll = new HorizontalScrollView(MainActivity.this);
+                        RelativeLayout relativeLayout = new RelativeLayout(MainActivity.this);
+                        relativeLayout.setMinimumWidth(300);
+                        relativeLayout.setBackgroundColor(Color.RED);
+                        relativeLayout.setMinimumHeight(video.getMeasuredHeight());
+                        LinearLayout topLinearLayout = new LinearLayout(MainActivity.this);
+                        // topLinearLayout.setLayoutParams(android.widget.LinearLayout.LayoutParams.FILL_PARENT,android.widget.LinearLayout.LayoutParams.FILL_PARENT);
+                        topLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                        topLinearLayout.addView(video);
+                        topLinearLayout.addView(relativeLayout);
+
+
+                        horScroll.addView(topLinearLayout);
+                        scroll_view.addView(horScroll);
+
+
+
 
 
                         //TODO: should i do other stuff like focus?
                     }
 
-                    //TODO: turn on video for the very first video
+                    //TODO: turn on video for the very first video or turn on the video that is in certain part of the screen
                     //turn_on_video(url);
 
                 } else {
@@ -236,7 +278,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         });
     }
 
-//
+
 //    public void turn_on_video(String uri){
 //        System.out.println(" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
 //        Log.d("main", "Turn On Video============================================");
@@ -250,6 +292,18 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 //        vd.requestFocus();
 //        vd.start();
 //    }
+
+
+    @Override
+    public void onMapLongClick(LatLng point) {
+
+        Intent intent = new Intent(MainActivity.this, MapView.class);
+        intent.putExtra("lat", gpsLocation.getLatitude());
+        intent.putExtra("lon", gpsLocation.getLongitude());
+        startActivity(intent);
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -265,7 +319,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         Double current_long = gpsLocation.getLongitude();
         Double current_lat = gpsLocation.getLatitude();
         String new_grid = long_lat_info_to_grid_info(current_lat, current_long);
-        Log.d("newV","=========================="+new_grid+"=================");
 
         if(current_grid_location == new_grid){
             return false;
@@ -352,44 +405,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         return mediaFile;
     }
 
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-//            if (resultCode == RESULT_OK) {
-//                // Image captured and saved to fileUri specified in the Intent
-//                System.out.println(data);
-//         //       Toast.makeText(this, "Image saved to:\n" +
-//        //                data.getData(), Toast.LENGTH_LONG).show();
-//            } else if (resultCode == RESULT_CANCELED) {
-//                // User cancelled the image capture
-//            } else {
-//                // Image capture failed, advise user
-//            }
-//        }
-//
-//        if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
-//            if (resultCode == RESULT_OK) {
-//                // Video captured and saved to fileUri specified in the Intent
-//                System.out.println(data);
-//               Toast.makeText(this, "Video saved to:\n" +
-//                        data.getData(), Toast.LENGTH_LONG).show();
-//                //TODO: video was captured successfully, get the location and upload file here
-//                if(gpsLocation != null){
-//                    //TODO: we at least have the last location
-//                    uploadVideo();
-//                }else{
-//                    //TODO:GSP location is null we fucked
-//                }
-//
-//            } else if (resultCode == RESULT_CANCELED) {
-//                // User cancelled the video capture
-//            } else {
-//                // Video capture failed, advise user
-//            }
-//        }
-//    }
-
     public String long_lat_info_to_grid_info(double latitude , double longitude){
         String grid_index;
         //TODO: THIS IS THE MOST IMPORTANT ALGORITHM PART WHERE WE TRANSLATE LONG/ LAT INFO TO GRID LOCATION IN DB
@@ -400,36 +415,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         return grid_index;
     }
 
-    //TODO: this funcion needs to be called in camera view activity not here
-    public void uploadVideo(){
-        if (gpsLocation==null){
-            gpsLocation=getLastKnownLocation();
-        }
-        Double latitude = gpsLocation.getLatitude();
-        Double longitude = gpsLocation.getLongitude();
-
-
-        String grid_index = long_lat_info_to_grid_info(latitude, longitude);
-
-        File filex = new File("/sdcard/VideoB.mp4");
-        System.out.println(filex);
-        try {
-            byte[] byteX = getBytesFromFile(filex);
-            ParseFile file = new ParseFile("secondV.mp4", byteX);
-            file.saveInBackground();
-
-            ParseObject obj = new ParseObject("VideoUploadX");
-
-            obj.put("firstUpload", file);
-            obj.put("grid_index", grid_index);
-            obj.saveInBackground();
-            Log.d("main", "=======SUCCESSUL FILE UPLOAD!!!!======================");
-
-        }catch (Exception e) {
-            e.printStackTrace();
-            System.out.print("======error in file upload function in main activity ===============");
-        }
-    }
 
 
     public void getLocation(){
@@ -512,6 +497,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap map) {
         main_activity_map = map;
+
+        main_activity_map.setOnMapLongClickListener(this);
         //final ArrayList<Marker> markerArray = setMarker();
         //ArrayList<Marker> boundedList = getBoundedMarkers(markerArray);
         double mylong = gpsLocation.getLongitude();
@@ -531,9 +518,10 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
             }
         });
 
-        Log.d("tag", "=============map ready==============");
-        //System.out.println(boundedList);
     }
+
+
+
 //
 //    public ArrayList<Marker> getBoundedMarkers(ArrayList<Marker> markerArray){
 //        ArrayList<Marker> markerList = new ArrayList<>();
@@ -582,12 +570,14 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 //        return new ArrayList<Marker>();
 //    }
 
-    public void start_payment_activity(String recipient_info, String amount, String note, String txn){
 
-        Intent venmoIntent = VenmoLibrary.openVenmoPayment("2843", "Mogo", recipient_info, amount, note, txn);
+
+    //need to be set as a part of onclick listener for pay for video in main activity
+    public void start_payment_activity(String recipient_info, String amount, String note){
+
+        Intent venmoIntent = VenmoLibrary.openVenmoPayment("2843", "Mogo", recipient_info, amount, note, "pay");
         startActivityForResult(venmoIntent, 1);
 
-        return;
     }
 
     @Override
@@ -617,5 +607,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
             }
         }
     }//end of on result
+
 
 }//end of main activity class
