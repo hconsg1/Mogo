@@ -129,15 +129,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         //uploadVideo();
         //startCamera();
 
-        //Button   Notification
-        ImageButton notibutton = (ImageButton) findViewById(R.id.main_activity_start_notification);
-        button.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view) {
-                Intent open_notification_intent = new Intent(MainActivity.this, NotificationActivity.class);
-                MainActivity.this.startActivity(open_notification_intent);
-                overridePendingTransition(R.anim.animation_open_camera, R.anim.animation_close_camera);
-            }
-        });
 
         //dispatchTakeVideoIntent();
 
