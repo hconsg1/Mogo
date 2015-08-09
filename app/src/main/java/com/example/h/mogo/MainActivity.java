@@ -32,6 +32,7 @@ import android.widget.VideoView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -92,17 +93,11 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
        // getLocation();
         setContentView(R.layout.activity_main);
-
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.main_activity_map);
+        mapFragment.getMapAsync(this);
         //Custom Map
-        mv = (MapView) findViewById(R.id.custommapview);
-        mv.setMinZoomLevel(mv.getTileProvider().getMinimumZoomLevel());
-        mv.setMaxZoomLevel(mv.getTileProvider().getMaximumZoomLevel());
-        mv.setCenter(mv.getTileProvider().getCenterCoordinate());
-        mv.setZoom(0);
-        currentMap = getString(R.string.streetMapId);
 
         // Show user location (purposely not in follow mode)
-        mv.setUserLocationEnabled(true);
 
   //      mv.loadFromGeoJSONURL("https://gist.githubusercontent.com/tmcw/10307131/raw/21c0a20312a2833afeee3b46028c3ed0e9756d4c/map.geojson");
 
@@ -237,6 +232,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
                         video.setMediaController(mc);
                         video.setVideoPath(url);
                         mc.setMinimumWidth(video.getMeasuredWidth());
+                        mc.setAnchorView(video);
+
 
                         video.setLayoutParams(new FrameLayout.LayoutParams((width - 1), (width - 1)));
 

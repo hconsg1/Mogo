@@ -21,7 +21,7 @@ public class MapView extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mapview_activity);
         //Custom Map
-        mapview_map = (com.mapbox.mapboxsdk.views.MapView) findViewById(R.id.custommapview);
+        mapview_map = (com.mapbox.mapboxsdk.views.MapView) findViewById(R.id.main_activity_map);
         mapview_map.setMinZoomLevel(mapview_map.getTileProvider().getMinimumZoomLevel());
         mapview_map.setMaxZoomLevel(mapview_map.getTileProvider().getMaximumZoomLevel());
         mapview_map.setCenter(mapview_map.getTileProvider().getCenterCoordinate());
