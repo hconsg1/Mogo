@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.location.Location;
 import android.location.LocationListener;
@@ -20,9 +21,11 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -216,13 +219,31 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                         int width = scroll_view.getWidth();
 
                         VideoView video = new VideoView(MainActivity.this);
-
-                        video.setVideoPath(url);
-
-                        video.setLayoutParams(new FrameLayout.LayoutParams((width-1), (width-1)));
-                        scroll_view.addView(video);
                         MediaController mc = new MediaController(MainActivity.this);
                         video.setMediaController(mc);
+                        video.setVideoPath(url);
+                        mc.setMinimumWidth(video.getMeasuredWidth());
+
+                        video.setLayoutParams(new FrameLayout.LayoutParams((width - 1), (width - 1)));
+
+
+                        HorizontalScrollView horScroll = new HorizontalScrollView(MainActivity.this);
+                        RelativeLayout relativeLayout = new RelativeLayout(MainActivity.this);
+                        relativeLayout.setMinimumWidth(300);
+                        relativeLayout.setBackgroundColor(Color.RED);
+                        relativeLayout.setMinimumHeight(video.getMeasuredHeight());
+                        LinearLayout topLinearLayout = new LinearLayout(MainActivity.this);
+                        // topLinearLayout.setLayoutParams(android.widget.LinearLayout.LayoutParams.FILL_PARENT,android.widget.LinearLayout.LayoutParams.FILL_PARENT);
+                        topLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                        topLinearLayout.addView(video);
+                        topLinearLayout.addView(relativeLayout);
+
+
+                        horScroll.addView(topLinearLayout);
+                        scroll_view.addView(horScroll);
+
+
+
 
                         //TODO: should i do other stuff like focus?
                     }
