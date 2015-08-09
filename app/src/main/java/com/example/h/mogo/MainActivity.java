@@ -17,9 +17,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.view.ViewGroup;
 import android.view.GestureDetector;
@@ -305,34 +307,38 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
                         video.setLayoutParams(new FrameLayout.LayoutParams((width - 1), (width - 1)));
 
                         HorizontalScrollView horScroll = new HorizontalScrollView(MainActivity.this);
-
                         horScroll.setBackgroundColor(Color.rgb(252, 78, 94));
 
-                        RelativeLayout swipeView = new RelativeLayout(MainActivity.this);
-                        swipeView.setBackgroundColor(Color.rgb(252, 78, 94));
-//                        swipeView.setMinimumHeight(video.getMeasuredHeight());
-//
-//                        horScroll.setLayoutParams(new FrameLayout.LayoutParams((width - 1), (width - 1)));
-
-                        RelativeLayout relativeLayout = new RelativeLayout(MainActivity.this);
-                        relativeLayout.setMinimumWidth(400);
-                        relativeLayout.setBackgroundColor(Color.RED);
-                        relativeLayout.setMinimumHeight(video.getMeasuredHeight());
+                        scroll_view.addView(horScroll);
                         LinearLayout topLinearLayout = new LinearLayout(MainActivity.this);
-                        // topLinearLayout.setLayoutParams(android.widget.LinearLayout.LayoutParams.FILL_PARENT,android.widget.LinearLayout.LayoutParams.FILL_PARENT);
                         topLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                        RelativeLayout swipeView = new RelativeLayout(MainActivity.this);
+                        swipeView.setMinimumWidth(100);
+                        swipeView.setBackgroundColor(Color.rgb(252, 78, 94));
+                        swipeView.setMinimumHeight(video.getMeasuredHeight());
+
+                        RelativeLayout.LayoutParams swipeViewParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                        swipeView.setLayoutParams(swipeViewParams);
+                        swipeViewParams.setMargins(50,50,50,50);
+
+                        RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                        RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+                        horScroll.addView(topLinearLayout);
                         topLinearLayout.addView(video);
                         topLinearLayout.addView(swipeView);
 
                         ImageButton button_like = new ImageButton(MainActivity.this);
-                        button_like.setImageResource(R.drawable.icon_like);
+                        button_like.setBackgroundResource(R.drawable.icon_like);
+                        button_like.setId(View.generateViewId());
 
                         ImageButton button_pay = new ImageButton(MainActivity.this);
-                        button_pay.setImageResource(R.drawable.icon_pay);
+                        button_pay.setBackgroundResource(R.drawable.icon_pay);
+                        params2.addRule(RelativeLayout.BELOW,button_like.getId());
 
-                        horScroll.addView(topLinearLayout);
-                        scroll_view.addView(horScroll);
-
+                        swipeView.addView(button_like, params1);
+                        swipeView.addView(button_pay, params2);
 
 
 
