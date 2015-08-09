@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -35,6 +36,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.mapbox.mapboxsdk.overlay.UserLocationOverlay;
 import com.mapbox.mapboxsdk.views.MapView;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
@@ -98,7 +101,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
         // Show user location (purposely not in follow mode)
         mv.setUserLocationEnabled(true);
 
-        mv.loadFromGeoJSONURL("https://gist.githubusercontent.com/tmcw/10307131/raw/21c0a20312a2833afeee3b46028c3ed0e9756d4c/map.geojson");
+  //      mv.loadFromGeoJSONURL("https://gist.githubusercontent.com/tmcw/10307131/raw/21c0a20312a2833afeee3b46028c3ed0e9756d4c/map.geojson");
 
 
 
@@ -107,16 +110,27 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
 
         //TODO: THIS BUTTON SHOULD BE THE MAP ITSELF : WHEN USER DRAGS OVER MAP THEN NEW ACTIVITY BY EXPANSION
         ImageButton button = (ImageButton) findViewById(R.id.main_activity_start_camera);
+
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 //TODO: start camera preview activity NEEDS TO BE CHANGED
                 //start camera preview activity
                 Intent video_record_intent = new Intent(MainActivity.this, CameraActivity.class);
-                video_record_intent.putExtra("location", long_lat_info_to_grid_info(gpsLocation.getLatitude(), gpsLocation.getLongitude()));
+
+                video_record_intent.putExtra("location",long_lat_info_to_grid_info(gpsLocation.getLatitude(),gpsLocation.getLongitude()));
+                video_record_intent.putExtra("geoPoint",gpsLocation.getLatitude()+"///"+gpsLocation.getLongitude());
+
 
                 MainActivity.this.startActivity(video_record_intent);
 
                 overridePendingTransition(R.anim.animation_open_camera, R.anim.animation_close_camera);
+            }
+        });
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
             }
         });
 
@@ -125,13 +139,29 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
                 Environment.DIRECTORY_PICTURES);
 
 
-
-
     }//end of oncreate function of main activity
 
 
+    public void addLike(String objectId){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("videoUploadX");
+        query.getInBackground(objectId, new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    int num_likes = object.getInt("num_like");
+                    object.put("num_like", num_likes++);
+                    object.saveInBackground();
+                }
+                else{
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
 
+
+>>>>>>> 123a0869567f0367610c869aed8fb3a594485e90
     public String getVideoUrl(ParseObject object){
         ParseFile videoFile = (ParseFile)object.get("firstUpload");
         System.out.println("++++++++++++"+videoFile);
@@ -192,6 +222,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
                         int width = scroll_view.getWidth();
 
                         VideoView video = new VideoView(MainActivity.this);
+
                         video.setVideoPath(url);
 
                         //set tag for each appended videos => the tags are EQUAL to object ID in DATABASE
@@ -511,7 +542,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
         Intent venmoIntent = VenmoLibrary.openVenmoPayment("2843", "Mogo", recipient_info, amount, note, "pay");
         startActivityForResult(venmoIntent, 1);
 
-        return;
     }
 
     @Override

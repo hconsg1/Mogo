@@ -35,12 +35,15 @@ public class CameraActivity extends Activity {
     private String outPutFilePath;
     private ImageButton capture_button;
     String grid_info;
+    String geoPoint;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_preview);
         grid_info = getIntent().getExtras().getString("location");
+        geoPoint = getIntent().getExtras().getString("geoPoint");
 
         // Create an instance of Camera
         mCamera = getCameraInstance();
@@ -70,6 +73,7 @@ public class CameraActivity extends Activity {
                             Intent video_playback_intent = new Intent(CameraActivity.this, Video_PlayBack_Confirmation_Activity.class);
                             video_playback_intent.putExtra("file_path", outPutFilePath);
                             video_playback_intent.putExtra("gridInfo", grid_info);
+                            video_playback_intent.putExtra("geoPoint", geoPoint);
                             startActivity(video_playback_intent);
 
                             isRecording = false;

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -16,6 +17,7 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+import com.squareup.okhttp.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +35,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.login_activity);
 
         LoginButton fb_button = (LoginButton)findViewById(R.id.facebook_login_button);
+        fb_button.setReadPermissions(Arrays.asList("email"));
         fb_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,7 +62,7 @@ public class LoginActivity extends Activity {
     public void onLoginClick(View v) {
         progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
 
-        List<String> permissions = Arrays.asList("public_profile", "user_friends","email");
+        List<String> permissions = Arrays.asList("public_profile", "user_friends", "email");
 
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
 
@@ -77,11 +80,13 @@ public class LoginActivity extends Activity {
                 } else {
                     //Log.d(IntegratingFacebookTutorialApplication.TAG, "User logged in through Facebook!");
                     System.out.println("================ LOGGED IN !!!!!!!!! =====================================");
+
                     showMainActivity();
                 }
             }
         });
     }//end of login click
+
     private void makeMeRequest() {
         Log.d("vp", "======================makeMeRequest======================");
         GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
@@ -92,9 +97,6 @@ public class LoginActivity extends Activity {
 
                         if (jsonObject != null) {
                             JSONObject userProfile = new JSONObject();
-                            System.out.println("\n\n\n\n\n==========================$$$$$$$$$$$$$$$$$$$$===========\n\n\n");
-                            System.out.println(jsonObject.toString());
-                            System.out.println("\n\n\n\n\n==========================$$$$$$$$$$$$$$$$$$$$===========\n\n\n");
 
                             try {
                                 System.out.println("\n\n\n000000000000000000000000000000000000000000000\n\n\n");
@@ -102,28 +104,20 @@ public class LoginActivity extends Activity {
                                 userProfile.put("name", jsonObject.getString("name"));
                                 System.out.println("\n\n\n111111111111111111111111111111111111\n\n\n");
 
+
                                 if (jsonObject.has("email")  &&   jsonObject.getString("email") != null) {
-                                    System.out.println("\n\n\n2222222222222222222222222222222222222222222222222\n\n\n");
-                                    System.out.println("====================="+jsonObject.getString("email"));
                                     userProfile.put("email", jsonObject.getString("email"));
                                 }
                                 // Save the user profile info in a user property
-                                System.out.println("\n\n\n33333333333333333333333333333333333333333333\n\n\n");
                                 ParseUser currentUser = ParseUser.getCurrentUser();
-                                System.out.println("\n\n\n444444444444444444444444444444444444444444444444\n\n\n");
                                 currentUser.put("profile", userProfile);
-                                System.out.println("\n\n\n555555555555555555555555555555555555555555555555555\n\n\n");
                                 currentUser.saveInBackground();
-                                System.out.println("\n\n\n66666666666666666666666666666666666666666666666666666\n\n\n");
 
-                                // Show the user info
-                                // user_id = userProfile.getString("facebookId");
-                                Log.d("1","======================="+currentUser+"==========");
-                                Log.d("1","======================="+userProfile+"==========");
                             } catch (JSONException e) {
                                 System.out.println("\n\n\n\n\n\n\n\n\n\n\n============ ERROR WHEN GETTING USER PROFILE IN LOGIN ACTIVITY ========================");
                                 e.printStackTrace();
                             }
+
                         } else if (graphResponse.getError() != null) {
                             switch (graphResponse.getError().getCategory()) {
                                 case LOGIN_RECOVERABLE:

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -37,6 +38,7 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
 
         final String path = getIntent().getExtras().getString("file_path");
         final String grid_index = getIntent().getExtras().getString("gridInfo");
+        final String geoPoint = getIntent().getExtras().getString("geoPoint");
         Log.d("pb", "========================" + path + "========================");
 
         VideoView videoView = (VideoView)findViewById(R.id.playback_video_view);
@@ -51,7 +53,7 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d("pb", "=======================OnClick======================");
-                uploadVideo(path, grid_index);
+                uploadVideo(path, grid_index, parseGeoString(geoPoint));
             }
         });
         ImageButton go_back_button = (ImageButton)findViewById(R.id.playback_button_delete);
@@ -64,7 +66,10 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
         });
 
     }//end of oncreate function of main activity
-
+    public ParseGeoPoint parseGeoString(String geoString){
+        String[] latlong = geoString.split("///");
+        return new ParseGeoPoint(Double.parseDouble(latlong[0]),Double.parseDouble(latlong[1]));
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -76,7 +81,7 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
 
 
     //TODO: this funcion needs to be called in camera view activity not here
-    public void uploadVideo(String path, String grid_index){
+    public void uploadVideo(String path, String grid_index, ParseGeoPoint geoPoint){
         JSONObject userProfile;
         //TODO: each video upload needs data about the user
          ParseUser currentUser = ParseUser.getCurrentUser();
@@ -105,8 +110,9 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
 
             obj.put("firstUpload", file);
             obj.put("grid_index", grid_index);
-
+            obj.put("geoPoint", geoPoint);
             obj.put("creator_id", userProfile.toString());
+            obj.put("num_like",0);
 
             Log.d("main", "=======SUCCESSUL FILE UPLOAD!!!!======================");
             //obj.put("creator_id", user_id);
