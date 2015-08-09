@@ -18,10 +18,8 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -57,7 +55,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class MainActivity extends Activity implements OnMapReadyCallback, GestureDetector.OnGestureListener{
+public class MainActivity extends Activity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     public static final String LOGTAG = "VIDEOCAPTURE";
     public static final int MEDIA_TYPE_IMAGE = 1;
@@ -83,10 +81,10 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
     private String current_grid_location;
     final private String venmo_app_secret  = "uAQP3LkE8YENxbCnkdgxEjq73rwTkxLM";
 
-    private MapView mv;
+    private GoogleMap mv;
     private UserLocationOverlay myLocationOverlay;
     private String currentMap = null;
-
+    private GestureDetector gestureDetector;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,11 +93,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
         setContentView(R.layout.activity_main);
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.main_activity_map);
         mapFragment.getMapAsync(this);
-        //Custom Map
 
-        // Show user location (purposely not in follow mode)
 
-  //      mv.loadFromGeoJSONURL("https://gist.githubusercontent.com/tmcw/10307131/raw/21c0a20312a2833afeee3b46028c3ed0e9756d4c/map.geojson");
 
 
 
@@ -115,8 +110,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
                 //start camera preview activity
                 Intent video_record_intent = new Intent(MainActivity.this, CameraActivity.class);
 
-                video_record_intent.putExtra("location",long_lat_info_to_grid_info(gpsLocation.getLatitude(),gpsLocation.getLongitude()));
-                video_record_intent.putExtra("geoPoint",gpsLocation.getLatitude()+"///"+gpsLocation.getLongitude());
+                video_record_intent.putExtra("location", long_lat_info_to_grid_info(gpsLocation.getLatitude(), gpsLocation.getLongitude()));
+                video_record_intent.putExtra("geoPoint", gpsLocation.getLatitude() + "///" + gpsLocation.getLongitude());
 
 
                 MainActivity.this.startActivity(video_record_intent);
@@ -124,20 +119,15 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
                 overridePendingTransition(R.anim.animation_open_camera, R.anim.animation_close_camera);
             }
         });
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
 
-            }
-        });
 
-
-        File path = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
 
     }//end of oncreate function of main activity
+
+
 
 
     public void addLike(String objectId){
@@ -149,15 +139,12 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
                     int num_likes = object.getInt("num_like");
                     object.put("num_like", num_likes++);
                     object.saveInBackground();
-                }
-                else{
+                } else {
                     e.printStackTrace();
                 }
             }
         });
     }
-
-
 
 
     public String getVideoUrl(ParseObject object){
@@ -286,6 +273,13 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
 //        vd.requestFocus();
 //        vd.start();
 //    }
+
+
+    @Override
+    public void onMapLongClick(LatLng point) {
+        System.out.println("\n\n\n HELL YEAH \n\n\n\n");
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -479,6 +473,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
     @Override
     public void onMapReady(GoogleMap map) {
         main_activity_map = map;
+
+        main_activity_map.setOnMapLongClickListener(this);
         //final ArrayList<Marker> markerArray = setMarker();
         //ArrayList<Marker> boundedList = getBoundedMarkers(markerArray);
         double mylong = gpsLocation.getLongitude();
@@ -588,40 +584,5 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Gestur
         }
     }//end of on result
 
-    @Override
-    public boolean onDown(MotionEvent e) {
-        return false;
-    }
 
-    @Override
-    public void onShowPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent e) {
-        System.out.println("\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n");
-        System.out.println(e.getRawX());
-        if(e.getRawY() < 200  ){
-            Intent intent = new Intent(MainActivity.this, MapView.class);
-            intent.putExtra("latitude", gpsLocation.getLatitude());
-            intent.putExtra("longitude", gpsLocation.getLongitude());
-            startActivity(intent);
-        }
-    }
-
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        return false;
-    }
 }//end of main activity class
