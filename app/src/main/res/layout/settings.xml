@@ -4,14 +4,87 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    >
+    android:background="#FFFFFF">
+    <ImageButton
+        android:id="@+id/settings_logo"
+        android:background="@drawable/img_login_logo"
+        android:layout_width="175dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter"
+        android:clickable="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="30dp" />
     <ScrollView
         android:id="@+id/settings_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:background="#b8b8b8">
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="#FFFFFF"
+            android:layout_marginTop="100dp"
+            android:paddingTop="40dp">
+            <Button
+                android:id="@+id/settings_item_edit"
+                android:text="@string/settings_text_editprofile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="#FFFFFF"
+                android:textStyle="normal"
+                android:textColor="#737373"
+                android:layout_marginBottom="10dp"
+                android:clickable="true" />
+            <Button
+                android:id="@+id/settings_item_pushnotification"
+                android:text="@string/settings_text_pushnotification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="#FFFFFF"
+                android:textStyle="normal"
+                android:textColor="#737373"
+                android:layout_marginBottom="10dp"
+                android:clickable="true" />
+            <Button
+                android:id="@+id/settings_item_contactus"
+                android:text="@string/settings_text_contactus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="#FFFFFF"
+                android:textStyle="normal"
+                android:textColor="#737373"
+                android:layout_marginBottom="10dp"
+                android:clickable="true" />
+            <Button
+                android:id="@+id/settings_item_termsofuse"
+                android:text="@string/settings_text_termsofuse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="#FFFFFF"
+                android:textStyle="normal"
+                android:textColor="#737373"
+                android:layout_marginBottom="10dp"
+                android:clickable="true" />
+            <Button
+                android:id="@+id/settings_item_logout"
+                android:text="@string/settings_text_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="#FFFFFF"
+                android:textStyle="normal"
+                android:textColor="#737373"
+                android:layout_marginBottom="10dp"
+                android:clickable="true" />
+        </LinearLayout>
     </ScrollView>
-
     <RelativeLayout
         android:id="@+id/settings_button_wrapper"
         android:layout_width="match_parent"
@@ -20,7 +93,7 @@
         android:layout_alignParentBottom="true"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="26dp"
         >
         <ImageButton
             android:id="@+id/settings_button_close"

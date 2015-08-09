@@ -29,6 +29,9 @@ import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
+import android.app.TabActivity;
+import android.widget.TabHost;
+import android.widget.TabHost.TabSpec;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -130,18 +133,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         //uploadVideo();
         //startCamera();
 
-
-        //Button   Notification
-//        ImageButton notibutton = (ImageButton) findViewById(R.id.main_activity_start_notification);
-//        button.setOnClickListener(new View.OnClickListener(){
-//            public void onClick(View view) {
-//                Intent open_notification_intent = new Intent(MainActivity.this, NotificationActivity.class);
-//                MainActivity.this.startActivity(open_notification_intent);
-//                overridePendingTransition(R.anim.animation_open_camera, R.anim.animation_close_camera);
-//            }
-//        });
-
-
         //Button  Open Notification
         ImageButton notibutton = (ImageButton) findViewById(R.id.main_activity_start_notification);
         notibutton.setOnClickListener(new View.OnClickListener(){
@@ -165,39 +156,19 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
 
         //Tab Hot and New
-        final Button tab_button_new = (Button) findViewById(R.id.main_activity_tab_new);
-        final Button tab_button_hot = (Button) findViewById(R.id.main_activity_tab_hot);
-        tab_button_new.setEnabled(true);
-        if(tab_button_new.isEnabled()) {
-            tab_button_hot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    tab_button_hot.setEnabled(true);
-                    tab_button_new.setEnabled(false);
-                    tab_button_hot.setBackgroundColor(Color.rgb(252, 78, 94));
-                    tab_button_hot.setTextColor(Color.WHITE);
-                    tab_button_new.setBackgroundColor(Color.WHITE);
-                    tab_button_new.setTextColor(Color.rgb(184,184,184));
-                }
-            });
-        }
-        else
-        {
-            tab_button_new.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    tab_button_hot.setEnabled(false);
-                    tab_button_new.setEnabled(true);
-                    tab_button_hot.setBackgroundColor(Color.WHITE);
-                    tab_button_hot.setTextColor(Color.rgb(184, 184, 184));
-                    tab_button_new.setBackgroundColor(Color.rgb(252, 78, 94));
-                    tab_button_new.setTextColor(Color.WHITE);
-                }
-            });
-        }
-
-        //dispatchTakeVideoIntent();
-
+//        TabHost tabHost = (TabHost)findViewById(R.id.main_activity_tab_wrapper);
+//
+//        TabSpec tab1 = tabHost.newTabSpec("First Tab");
+//        TabSpec tab2 = tabHost.newTabSpec("Second Tab");
+//
+//        tab1.setIndicator("Tab1");
+////        tab1.setContent(new Intent(this,Tab1Activity.class));
+//        tab2.setIndicator("Tab2");
+////        tab2.setContent(new Intent(this,Tab2Activity.class));
+//
+//        /** Add the tabs to the TabHost to display. */
+//        tabHost.addTab(tab1);
+//        tabHost.addTab(tab2);
 
     }//end of oncreate function of main activity
 
@@ -320,7 +291,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
                         RelativeLayout.LayoutParams swipeViewParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
                         swipeView.setLayoutParams(swipeViewParams);
-                        swipeViewParams.setMargins(50,50,50,50);
+                        swipeViewParams.setMargins(50, 50, 50, 50);
 
                         RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
                         RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -331,7 +302,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
                         ImageButton button_like = new ImageButton(MainActivity.this);
                         button_like.setBackgroundResource(R.drawable.icon_like);
-                        button_like.setId(View.generateViewId());
+//                        button_like.setId(View.generateViewId());
 
                         ImageButton button_pay = new ImageButton(MainActivity.this);
                         button_pay.setBackgroundResource(R.drawable.icon_pay);
@@ -382,7 +353,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         intent.putExtra("lat", gpsLocation.getLatitude());
         intent.putExtra("lon", gpsLocation.getLongitude());
         startActivity(intent);
-
+        overridePendingTransition(R.anim.animation_push_down_out, R.anim.animation_push_down_in);
     }
 
 

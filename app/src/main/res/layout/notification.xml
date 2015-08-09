@@ -10,7 +10,6 @@
             android:id="@+id/notification_wrapper"
             android:layout_width="match_parent"
             android:layout_height="400dp"
-            android:background="#b8b8b8"
             android:paddingLeft="20dp"
             android:paddingTop="40dp" />
 
@@ -22,7 +21,7 @@
         android:layout_alignParentBottom="true"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="26dp"
         >
         <ImageButton
             android:id="@+id/notification_button_setting"

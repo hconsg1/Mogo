@@ -8,9 +8,8 @@
     <RelativeLayout
         android:id="@+id/playback_upper_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="41dp"
+        android:layout_height="200dp"
         android:paddingLeft="20dp"
-        android:background="#bada55"
         android:paddingRight="20dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -39,7 +38,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/playback_progressbar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="24dp">
 
         <ImageButton
             android:id="@+id/playback_button_upload"

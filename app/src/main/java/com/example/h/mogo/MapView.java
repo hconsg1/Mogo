@@ -62,6 +62,7 @@ public class MapView extends Activity implements OnMapReadyCallback, GoogleMap.O
                 Intent intent = new Intent(MapView.this, MainActivity.class);
                 //  intent.putExtra("markerList",_visibleMarkers );
                 startActivity(intent);
+                overridePendingTransition(R.anim.animation_push_up_out, R.anim.animation_push_up_in);
             }
         });
     }//end of on create
@@ -107,9 +108,9 @@ public class MapView extends Activity implements OnMapReadyCallback, GoogleMap.O
         popupView = layoutInflater.inflate(R.layout.mapview_popup, null);
 
         popupWindow = new PopupWindow(popupView,
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        popupWindow.showAtLocation(map_fragment_element, Gravity.NO_GRAVITY, 0, 0 );
+        popupWindow.showAtLocation(map_fragment_element, Gravity.BOTTOM, 0, 0 );
         popup_show = true;
 
         mapview_map.addMarker(new MarkerOptions()

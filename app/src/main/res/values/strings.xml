@@ -13,4 +13,17 @@
     <string name="main_activity_text_hot">hot</string>
     <string name="main_activity_text_new">new</string>
 
+    <!--map popup-->
+    <string name="map_popup_request">Request a Video</string>
+    <string name="map_popup_feed">Go to Main Feed</string>
+
+    <!--settings menu-->
+    <string name="settings_text_editprofile">Edit Profile</string>
+    <string name="settings_text_pushnotification">Push Notification Settings</string>
+    <string name="settings_text_contactus">Contact Us</string>
+    <string name="settings_text_termsofuse">Terms of Use</string>
+    <string name="settings_text_logout">Log Out</string>
+
+
+
 </resources>
