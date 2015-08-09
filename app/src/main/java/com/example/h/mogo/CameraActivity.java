@@ -54,6 +54,7 @@ public class CameraActivity extends Activity {
 
         // Add a listener to the Capture button
         capture_button = (ImageButton) findViewById(R.id.camera_button_capture);
+        capture_button.setBackgroundResource(R.drawable.default);
         capture_button.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -61,6 +62,8 @@ public class CameraActivity extends Activity {
                         //TODO: stop the video and start the video playback confirmation activity
                         //need to store the video in internal storage and push the file path to the video playback activity
                         if (isRecording) {
+                            // icon style
+                            v.setBackgroundResource(R.drawable.icon_start_camera);
 
                             // stop recording and release camera
                             mMediaRecorder.stop();  // stop the recording
@@ -75,6 +78,8 @@ public class CameraActivity extends Activity {
                             isRecording = false;
 
                         } else {
+                            //icon style
+                            v.setBackgroundResource(R.drawable.icon_camera_stop);
                             // initialize video camera
                             if (prepareVideoRecorder()) {
                                 // Camera is available and unlocked, MediaRecorder is prepared,

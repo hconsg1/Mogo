@@ -18,11 +18,21 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.MotionEvent;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
+
+
+import android.widget.Button;
+import android.widget.EditText;
+import android.graphics.Color;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -45,6 +55,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
+
 import com.mapbox.mapboxsdk.api.ILatLng;
 import com.mapbox.mapboxsdk.geometry.BoundingBox;
 import com.mapbox.mapboxsdk.overlay.Icon;
@@ -52,6 +64,7 @@ import com.mapbox.mapboxsdk.overlay.UserLocationOverlay;
 import com.mapbox.mapboxsdk.tileprovider.tilesource.*;
 import com.mapbox.mapboxsdk.views.MapView;
 import com.mapbox.mapboxsdk.views.util.TilesLoadedListener;
+import com.mapbox.mapboxsdk.tileprovider.tilesource.ITileLayer;
 
 
 public class MainActivity extends Activity implements OnMapReadyCallback {
@@ -80,9 +93,13 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     private String current_grid_location;
     final private String venmo_app_secret  = "uAQP3LkE8YENxbCnkdgxEjq73rwTkxLM";
 
+    //Map
     private MapView mv;
     private UserLocationOverlay myLocationOverlay;
     private String currentMap = null;
+
+    //Swipe to interact
+    GestureDetector detector;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,18 +113,19 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         mv.setMinZoomLevel(mv.getTileProvider().getMinimumZoomLevel());
         mv.setMaxZoomLevel(mv.getTileProvider().getMaximumZoomLevel());
         mv.setCenter(mv.getTileProvider().getCenterCoordinate());
-        mv.setZoom(0);
+        mv.setZoom(15);
         currentMap = getString(R.string.streetMapId);
+        MapView.setTileSource(new MapboxTileLayer("sojoonsup.n475ppdn"));
 
         // Show user location (purposely not in follow mode)
         mv.setUserLocationEnabled(true);
 
-        mv.loadFromGeoJSONURL("https://gist.githubusercontent.com/tmcw/10307131/raw/21c0a20312a2833afeee3b46028c3ed0e9756d4c/map.geojson");
+//        //draw path
+//        mv.loadFromGeoJSONURL("https://gist.githubusercontent.com/tmcw/10307131/raw/21c0a20312a2833afeee3b46028c3ed0e9756d4c/map.geojson");
 
 //        //original map
 //        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.main_activity_map);
 //        mapFragment.getMapAsync(this);
-
 
 
         //TODO: THIS BUTTON SHOULD BE THE MAP ITSELF : WHEN USER DRAGS OVER MAP THEN NEW ACTIVITY BY EXPANSION
@@ -134,10 +152,22 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
         //uploadVideo();
         //startCamera();
+
+        //Button   Notification
+        ImageButton notibutton = (ImageButton) findViewById(R.id.main_activity_start_notification);
+        button.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view) {
+                Intent open_notification_intent = new Intent(MainActivity.this, NotificationActivity.class);
+                MainActivity.this.startActivity(open_notification_intent);
+                overridePendingTransition(R.anim.animation_push_left, R.anim.animation_push_right);
+            }
+        });
+
         //dispatchTakeVideoIntent();
 
 
     }//end of oncreate function of main activity
+
     public String getVideoUrl(ParseObject object){
         ParseFile videoFile = (ParseFile)object.get("firstUpload");
         System.out.println("++++++++++++"+videoFile);
@@ -152,6 +182,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         }
         return myurl;
     }
+
 
     public void get_new_video_feed(String grid_info){
         System.out.println("=======================  starting get new video feed function ============================");
@@ -187,6 +218,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                         scroll_view.addView(video);
                         MediaController mc = new MediaController(MainActivity.this);
                         video.setMediaController(mc);
+
 
                         //TODO: should i do other stuff like focus?
                     }
