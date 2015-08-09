@@ -44,7 +44,7 @@ public class CameraActivity extends Activity {
         setContentView(R.layout.camera_preview);
         grid_info = getIntent().getExtras().getString("location");
         geoPoint = getIntent().getExtras().getString("geoPoint");
-        System.out.println("=============="+grid_info+"=====================");
+
         // Create an instance of Camera
         mCamera = getCameraInstance();
         mCamera.setDisplayOrientation(90);
@@ -90,7 +90,7 @@ public class CameraActivity extends Activity {
                                 CharSequence text = "video recording started";
                                 int duration = Toast.LENGTH_SHORT;
                                 Toast toast = Toast.makeText(context, text, duration);
-                                toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+                                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                                 toast.show();
                                 isRecording = true;
 
@@ -102,7 +102,26 @@ public class CameraActivity extends Activity {
                         }
                     }
                 }
-        );
+        ); // end of set onclick listener for CAPTUURE START VIDEO BUTTON
+
+        ImageButton close_button= (ImageButton) findViewById(R.id.camera_button_close);
+        close_button.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO: stop the video and go back to main activity
+                        if (isRecording) {
+                            // stop recording and release camera
+                            mMediaRecorder.stop();  // stop the recording
+                            releaseMediaRecorder(); // release the MediaRecorder object
+                            mCamera.lock();         // take camera access back from MediaRecorder
+                        }
+
+                        Intent intent = new Intent(CameraActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                }
+        ); // end of set onclick listener for CAPTUURE START VIDEO BUTTON
 
         mCamera.setFaceDetectionListener(new Camera_Face_Detection_Listener());
 

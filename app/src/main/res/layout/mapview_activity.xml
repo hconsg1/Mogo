@@ -10,21 +10,47 @@
     tools:context="com.example.h.mogo.MapView">
 
     <com.mapbox.mapboxsdk.views.MapView
-        android:id="@+id/custommapview"
+        android:id="@+id/mapview_activity_map"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="400dp"
         mapbox:mapid="@string/streetMapId"
-        mapbox:accessToken="@string/testAccessToken"/>
+        mapbox:accessToken="@string/testAccessToken"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/mapview_button_wrapper"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/mapview_button_wrapper"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="VIEW"
-        android:id="@+id/button"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="42dp" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <ImageButton
+            android:id="@+id/mapview_start_camera"
+            android:background="@drawable/icon_camera_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:scaleType="center"
+            android:clickable="true"
+            />
+        <ImageButton
+            android:id="@+id/mapview_back_button"
+            android:background="@drawable/icon_close"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            />
+    </RelativeLayout>
 
 
 </RelativeLayout>
