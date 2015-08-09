@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -104,7 +105,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
                 MainActivity.this.startActivity(video_record_intent);
 
-                overridePendingTransition(R.anim.animation_open_camera, R.anim.animation_close_camera);
+                overridePendingTransition(R.anim.animation_push_up_in, R.anim.animation_push_up_out);
             }
         });
 
@@ -116,6 +117,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         //uploadVideo();
         //startCamera();
 
+
         //Button   Notification
 //        ImageButton notibutton = (ImageButton) findViewById(R.id.main_activity_start_notification);
 //        button.setOnClickListener(new View.OnClickListener(){
@@ -126,6 +128,60 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 //            }
 //        });
 
+
+        //Button  Open Notification
+        ImageButton notibutton = (ImageButton) findViewById(R.id.main_activity_start_notification);
+        notibutton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view) {
+                Intent open_notification_intent = new Intent(MainActivity.this, NotificationActivity.class);
+                startActivity(open_notification_intent);
+                overridePendingTransition(R.anim.animation_push_left_in, R.anim.animation_push_left_out);
+            }
+        });
+
+
+        //Button   Open Settings
+        ImageButton settingsbutton = (ImageButton) findViewById(R.id.main_activity_start_settings);
+        settingsbutton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view) {
+                Intent open_settings_intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(open_settings_intent);
+                overridePendingTransition(R.anim.animation_push_right_in, R.anim.animation_push_right_out);
+            }
+        });
+
+
+        //Tab Hot and New
+        final Button tab_button_new = (Button) findViewById(R.id.main_activity_tab_new);
+        final Button tab_button_hot = (Button) findViewById(R.id.main_activity_tab_hot);
+        tab_button_new.setEnabled(true);
+        if(tab_button_new.isEnabled()) {
+            tab_button_hot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tab_button_hot.setEnabled(true);
+                    tab_button_new.setEnabled(false);
+                    tab_button_hot.setBackgroundColor(Color.rgb(252, 78, 94));
+                    tab_button_hot.setTextColor(Color.WHITE);
+                    tab_button_new.setBackgroundColor(Color.WHITE);
+                    tab_button_new.setTextColor(Color.rgb(184,184,184));
+                }
+            });
+        }
+        else
+        {
+            tab_button_new.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tab_button_hot.setEnabled(false);
+                    tab_button_new.setEnabled(true);
+                    tab_button_hot.setBackgroundColor(Color.WHITE);
+                    tab_button_hot.setTextColor(Color.rgb(184, 184, 184));
+                    tab_button_new.setBackgroundColor(Color.rgb(252, 78, 94));
+                    tab_button_new.setTextColor(Color.WHITE);
+                }
+            });
+        }
         //dispatchTakeVideoIntent();
 
 
