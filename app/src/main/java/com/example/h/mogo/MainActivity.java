@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.location.Location;
 import android.location.LocationListener;
@@ -20,9 +21,11 @@ import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -51,7 +54,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class MainActivity extends Activity implements OnMapReadyCallback, OnMapLongClickListener  {
+public class MainActivity extends Activity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     public static final String LOGTAG = "VIDEOCAPTURE";
     public static final int MEDIA_TYPE_IMAGE = 1;
@@ -212,22 +215,38 @@ public class MainActivity extends Activity implements OnMapReadyCallback, OnMapL
 
                         VideoView video = new VideoView(MainActivity.this);
 
-                        video.setVideoPath(url);
-
                         //set tag for each appended videos => the tags are EQUAL to object ID in DATABASE
                         String video_object_id = object.getObjectId();
                         ParseGeoPoint video_location = object.getParseGeoPoint("geoPoint");
                         ArrayList<Object> array_object = new ArrayList<Object>();
-
                         array_object.add(video_object_id);
                         array_object.add(video_location);
-
                         video.setTag(array_object);
-
-                        video.setLayoutParams(new FrameLayout.LayoutParams((width-1), (width-1)));
-                        scroll_view.addView(video);
                         MediaController mc = new MediaController(MainActivity.this);
                         video.setMediaController(mc);
+                        video.setVideoPath(url);
+                        mc.setMinimumWidth(video.getMeasuredWidth());
+
+                        video.setLayoutParams(new FrameLayout.LayoutParams((width - 1), (width - 1)));
+
+
+                        HorizontalScrollView horScroll = new HorizontalScrollView(MainActivity.this);
+                        RelativeLayout relativeLayout = new RelativeLayout(MainActivity.this);
+                        relativeLayout.setMinimumWidth(300);
+                        relativeLayout.setBackgroundColor(Color.RED);
+                        relativeLayout.setMinimumHeight(video.getMeasuredHeight());
+                        LinearLayout topLinearLayout = new LinearLayout(MainActivity.this);
+                        // topLinearLayout.setLayoutParams(android.widget.LinearLayout.LayoutParams.FILL_PARENT,android.widget.LinearLayout.LayoutParams.FILL_PARENT);
+                        topLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                        topLinearLayout.addView(video);
+                        topLinearLayout.addView(relativeLayout);
+
+
+                        horScroll.addView(topLinearLayout);
+                        scroll_view.addView(horScroll);
+
+
+
 
                         //TODO: should i do other stuff like focus?
                     }
