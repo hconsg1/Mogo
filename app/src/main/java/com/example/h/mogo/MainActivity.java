@@ -310,8 +310,9 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
                         RelativeLayout swipeView = new RelativeLayout(MainActivity.this);
                         swipeView.setBackgroundColor(Color.rgb(252, 78, 94));
-                        swipeView.setMinimumHeight(video.getMeasuredHeight());
-                        horScroll.setLayoutParams(new FrameLayout.LayoutParams((width - 1), (width - 1)));
+//                        swipeView.setMinimumHeight(video.getMeasuredHeight());
+//
+//                        horScroll.setLayoutParams(new FrameLayout.LayoutParams((width - 1), (width - 1)));
 
                         RelativeLayout relativeLayout = new RelativeLayout(MainActivity.this);
                         relativeLayout.setMinimumWidth(400);
