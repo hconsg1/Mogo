@@ -67,8 +67,8 @@
 
     <VideoView
         android:id="@+id/playback_video_view"
-        android:layout_width="fill_parent"
-        android:layout_height="350dp"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
         android:background="#d4d4d4"
         android:layout_below="@+id/playback_upper_wrapper"
         android:layout_alignParentLeft="true"
