@@ -35,6 +35,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -87,6 +88,9 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         setContentView(R.layout.activity_main);
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.main_activity_map);
         mapFragment.getMapAsync(this);
+
+
+
 
 
 
@@ -188,9 +192,16 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
     }//end of oncreate function of main activity
 
 
+    public void set_new_map(Double lat, Double lon){
+        main_activity_map.setMyLocationEnabled(true);
+        main_activity_map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,lon), 13));
 
+        Marker marker1 = main_activity_map.addMarker(new MarkerOptions()
+                .title("New Location!")
+                        // .snippet("click this button to show all videos around you!")
+                .position(new LatLng(lat,lon)));
 
-
+    }
     public void addLike(String objectId){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("videoUploadX");
         query.getInBackground(objectId, new GetCallback<ParseObject>() {
@@ -403,10 +414,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
     public void onResume() {
         super.onResume();
         getLocation();
-        if(need_new_video_feed() == true){
-            String current_grid_index = long_lat_info_to_grid_info(gpsLocation.getLatitude(), gpsLocation.getLongitude());
-            get_new_video_feed(current_grid_index);
-        }
+
+
     }
 
 
@@ -554,14 +563,24 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
         main_activity_map.setMyLocationEnabled(true);
         main_activity_map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 13));
-        main_activity_map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+ /*       main_activity_map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
 //                Log.d("m","=====================camera move=====================");
 //                System.out.println(getBoundedMarkers(markerArray));
             }
-        });
-
+        });*/
+        Bundle bundle = getIntent().getExtras();
+        if (bundle!=null) {
+            get_new_video_feed(long_lat_info_to_grid_info((Double)bundle.get("new_lat"),(Double) bundle.get("new_lon")));
+            set_new_map((Double)bundle.get("new_lat"),(Double) bundle.get("new_lon"));
+        }
+        else {
+            if (need_new_video_feed() == true) {
+                String current_grid_index = long_lat_info_to_grid_info(gpsLocation.getLatitude(), gpsLocation.getLongitude());
+                get_new_video_feed(current_grid_index);
+            }
+        }
     }
 
 
