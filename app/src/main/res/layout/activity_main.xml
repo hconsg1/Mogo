@@ -39,6 +39,7 @@
         android:id="@+id/main_activity_map"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
+        android:layout_below="@id/main_activity_tab_wrapper"
         android:layout_height="200dp"
         android:background="#bada55"/>
 
