@@ -17,10 +17,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.widget.Button;
 import android.view.ViewGroup;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -35,10 +35,6 @@ import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
-
-import android.widget.Button;
-import android.widget.EditText;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -46,6 +42,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -101,6 +98,9 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
 
 
+
+
+
         //TODO: THIS BUTTON SHOULD BE THE MAP ITSELF : WHEN USER DRAGS OVER MAP THEN NEW ACTIVITY BY EXPANSION
         ImageButton button = (ImageButton) findViewById(R.id.main_activity_start_camera);
 
@@ -129,6 +129,17 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         //startCamera();
 
 
+        //Button   Notification
+//        ImageButton notibutton = (ImageButton) findViewById(R.id.main_activity_start_notification);
+//        button.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View view) {
+//                Intent open_notification_intent = new Intent(MainActivity.this, NotificationActivity.class);
+//                MainActivity.this.startActivity(open_notification_intent);
+//                overridePendingTransition(R.anim.animation_open_camera, R.anim.animation_close_camera);
+//            }
+//        });
+
+
         //Button  Open Notification
         ImageButton notibutton = (ImageButton) findViewById(R.id.main_activity_start_notification);
         notibutton.setOnClickListener(new View.OnClickListener(){
@@ -149,6 +160,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
                 overridePendingTransition(R.anim.animation_push_right_in, R.anim.animation_push_right_out);
             }
         });
+
 
         //Tab Hot and New
         final Button tab_button_new = (Button) findViewById(R.id.main_activity_tab_new);
@@ -188,9 +200,16 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
     }//end of oncreate function of main activity
 
 
+    public void set_new_map(Double lat, Double lon){
+        main_activity_map.setMyLocationEnabled(true);
+        main_activity_map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,lon), 13));
 
+        Marker marker1 = main_activity_map.addMarker(new MarkerOptions()
+                .title("New Location!")
+                        // .snippet("click this button to show all videos around you!")
+                .position(new LatLng(lat,lon)));
 
-
+    }
     public void addLike(String objectId){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("videoUploadX");
         query.getInBackground(objectId, new GetCallback<ParseObject>() {
@@ -285,13 +304,19 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
                         video.setLayoutParams(new FrameLayout.LayoutParams((width - 1), (width - 1)));
 
-
                         HorizontalScrollView horScroll = new HorizontalScrollView(MainActivity.this);
+
                         horScroll.setBackgroundColor(Color.rgb(252, 78, 94));
 
                         RelativeLayout swipeView = new RelativeLayout(MainActivity.this);
                         swipeView.setBackgroundColor(Color.rgb(252, 78, 94));
                         swipeView.setMinimumHeight(video.getMeasuredHeight());
+                        horScroll.setLayoutParams(new FrameLayout.LayoutParams((width - 1), (width - 1)));
+
+                        RelativeLayout relativeLayout = new RelativeLayout(MainActivity.this);
+                        relativeLayout.setMinimumWidth(400);
+                        relativeLayout.setBackgroundColor(Color.RED);
+                        relativeLayout.setMinimumHeight(video.getMeasuredHeight());
                         LinearLayout topLinearLayout = new LinearLayout(MainActivity.this);
                         // topLinearLayout.setLayoutParams(android.widget.LinearLayout.LayoutParams.FILL_PARENT,android.widget.LinearLayout.LayoutParams.FILL_PARENT);
                         topLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -408,10 +433,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
     public void onResume() {
         super.onResume();
         getLocation();
-        if(need_new_video_feed() == true){
-            String current_grid_index = long_lat_info_to_grid_info(gpsLocation.getLatitude(), gpsLocation.getLongitude());
-            get_new_video_feed(current_grid_index);
-        }
+
+
     }
 
 
@@ -559,14 +582,24 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
         main_activity_map.setMyLocationEnabled(true);
         main_activity_map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 13));
-        main_activity_map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+ /*       main_activity_map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
 //                Log.d("m","=====================camera move=====================");
 //                System.out.println(getBoundedMarkers(markerArray));
             }
-        });
-
+        });*/
+        Bundle bundle = getIntent().getExtras();
+        if (bundle!=null) {
+            get_new_video_feed(long_lat_info_to_grid_info((Double)bundle.get("new_lat"),(Double) bundle.get("new_lon")));
+            set_new_map((Double)bundle.get("new_lat"),(Double) bundle.get("new_lon"));
+        }
+        else {
+            if (need_new_video_feed() == true) {
+                String current_grid_index = long_lat_info_to_grid_info(gpsLocation.getLatitude(), gpsLocation.getLongitude());
+                get_new_video_feed(current_grid_index);
+            }
+        }
     }
 
 

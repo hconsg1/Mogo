@@ -40,14 +40,12 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
         final String path = getIntent().getExtras().getString("file_path");
         final String grid_index = getIntent().getExtras().getString("gridInfo");
         final String geoPoint = getIntent().getExtras().getString("geoPoint");
-        Log.d("pb", "========================" + path + "========================");
 
 
         VideoView videoView = (VideoView)findViewById(R.id.playback_video_view);
         videoView.setVideoPath("file://" + path);
         videoView.setZOrderOnTop(true);
-      //  videoView.setRotation(90f);
-        videoView.setMinimumHeight(videoView.getWidth());
+
         MediaController mc = new MediaController(Video_PlayBack_Confirmation_Activity.this);
         videoView.setMediaController(mc);
 
@@ -56,7 +54,6 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("pb", "=======================OnClick======================");
                 uploadVideo(path, grid_index, parseGeoString(geoPoint));
                 overridePendingTransition(R.anim.animation_push_down_in, R.anim.animation_push_down_out);
             }
