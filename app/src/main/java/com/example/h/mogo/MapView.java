@@ -9,7 +9,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.Toast;
@@ -23,6 +26,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -109,7 +113,7 @@ public class MapView extends Activity implements OnMapReadyCallback, GoogleMap.O
         popupWindow = new PopupWindow(popupView,
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        popupWindow.showAtLocation(map_fragment_element, Gravity.NO_GRAVITY, 0, 0 );
+        popupWindow.showAtLocation(map_fragment_element, Gravity.NO_GRAVITY, 0, 0);
         popup_show = true;
 
         mapview_map.addMarker(new MarkerOptions()
@@ -119,6 +123,7 @@ public class MapView extends Activity implements OnMapReadyCallback, GoogleMap.O
                 .position(new LatLng(lat, lon)));
 
         Button new_location_button = (Button) popupView.findViewById(R.id.mapview_go_to_main_feed);
+
         new_location_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,6 +149,7 @@ public class MapView extends Activity implements OnMapReadyCallback, GoogleMap.O
 
                 obj.put("requested_user", userProfile.toString());
                 obj.put("grid_index", long_lat_info_to_grid_info(lat, lon));
+                obj.put("location", new ParseGeoPoint(lat,lon));
                 obj.saveInBackground();
                 Context context = getApplicationContext();
                 CharSequence text = "Video Requested!";
@@ -153,6 +159,16 @@ public class MapView extends Activity implements OnMapReadyCallback, GoogleMap.O
                 toast.show();
             }
         });
+ /*       EditText editText = (EditText) popupView.findViewById(R.id.editText);
+        editText.setFocusable(true);
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);                }
+            }
+        });*/
     }
 
     public String long_lat_info_to_grid_info(double latitude , double longitude){

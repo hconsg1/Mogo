@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -27,6 +30,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Locale;
 
 public class Video_PlayBack_Confirmation_Activity extends Activity {
 
@@ -41,13 +46,29 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
         final String grid_index = getIntent().getExtras().getString("gridInfo");
         final String geoPoint = getIntent().getExtras().getString("geoPoint");
 
+        TextView textView = (TextView)findViewById(R.id.text1);
+        Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geoCoder.getFromLocation(parseGeoString(geoPoint).getLatitude(),parseGeoString(geoPoint).getLongitude(), 1);
+
+            String add = "";
+            if (addresses.size() > 0)
+            {
+                for (int i=0; i<addresses.get(0).getMaxAddressLineIndex();i++)
+                    add += addresses.get(0).getAddressLine(i) + "\n";
+            }
+
+            textView.setText(add);
+        }
+        catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
 
         VideoView videoView = (VideoView)findViewById(R.id.playback_video_view);
         videoView.setVideoPath("file://" + path);
-        videoView.setRotation(90);
         videoView.setZOrderOnTop(true);
-      //  videoView.setRotation(90f);
-        videoView.setMinimumHeight(videoView.getWidth());
+
         MediaController mc = new MediaController(Video_PlayBack_Confirmation_Activity.this);
         videoView.setMediaController(mc);
 
@@ -57,6 +78,7 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
             @Override
             public void onClick(View v) {
                 uploadVideo(path, grid_index, parseGeoString(geoPoint));
+                overridePendingTransition(R.anim.animation_push_down_in, R.anim.animation_push_down_out);
             }
         });
         ImageButton go_back_button = (ImageButton)findViewById(R.id.playback_button_delete);
@@ -65,6 +87,7 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(Video_PlayBack_Confirmation_Activity.this, MainActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.animation_push_down_in, R.anim.animation_push_down_out);
             }
         });
 

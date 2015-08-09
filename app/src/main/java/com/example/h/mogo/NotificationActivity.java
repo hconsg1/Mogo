@@ -23,5 +23,15 @@ public class NotificationActivity extends Activity
                 overridePendingTransition(R.anim.animation_push_right_in, R.anim.animation_push_right_out);
             }
         });
+
+        //Button   Open Settings
+        ImageButton settingsbutton = (ImageButton) findViewById(R.id.notification_button_setting);
+        settingsbutton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent open_settings_intent = new Intent(NotificationActivity.this, SettingsActivity.class);
+                startActivity(open_settings_intent);
+                overridePendingTransition(R.anim.animation_push_left_in, R.anim.animation_push_left_out);
+            }
+        });
     }
 }
