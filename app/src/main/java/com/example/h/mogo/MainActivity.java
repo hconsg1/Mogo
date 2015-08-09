@@ -35,6 +35,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.mapbox.mapboxsdk.overlay.UserLocationOverlay;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -271,10 +272,12 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
     @Override
     public void onMapLongClick(LatLng point) {
+
         Intent intent = new Intent(MainActivity.this, MapView.class);
         intent.putExtra("lat", gpsLocation.getLatitude());
         intent.putExtra("lon", gpsLocation.getLongitude());
         startActivity(intent);
+
     }
 
 
