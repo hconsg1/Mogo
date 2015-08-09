@@ -5,12 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     >
-    <ScrollView
-        android:id="@+id/notification_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:background="#b8b8b8">
-    </ScrollView>
+
+        <ListView
+            android:id="@+id/notification_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:background="#b8b8b8"
+            android:paddingLeft="20dp"
+            android:paddingTop="40dp" />
 
     <RelativeLayout
         android:id="@+id/notification_button_wrapper"

@@ -1,5 +1,6 @@
 package com.example.h.mogo;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
@@ -36,7 +38,6 @@ import android.widget.VideoView;
 
 import android.widget.Button;
 import android.widget.EditText;
-import android.graphics.Color;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -180,6 +181,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
                 }
             });
         }
+
         //dispatchTakeVideoIntent();
 
 
@@ -285,16 +287,22 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
 
                         HorizontalScrollView horScroll = new HorizontalScrollView(MainActivity.this);
-                        RelativeLayout relativeLayout = new RelativeLayout(MainActivity.this);
-                        relativeLayout.setMinimumWidth(300);
-                        relativeLayout.setBackgroundColor(Color.RED);
-                        relativeLayout.setMinimumHeight(video.getMeasuredHeight());
+                        horScroll.setBackgroundColor(Color.rgb(252, 78, 94));
+
+                        RelativeLayout swipeView = new RelativeLayout(MainActivity.this);
+                        swipeView.setBackgroundColor(Color.rgb(252, 78, 94));
+                        swipeView.setMinimumHeight(video.getMeasuredHeight());
                         LinearLayout topLinearLayout = new LinearLayout(MainActivity.this);
                         // topLinearLayout.setLayoutParams(android.widget.LinearLayout.LayoutParams.FILL_PARENT,android.widget.LinearLayout.LayoutParams.FILL_PARENT);
                         topLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
                         topLinearLayout.addView(video);
-                        topLinearLayout.addView(relativeLayout);
+                        topLinearLayout.addView(swipeView);
 
+                        ImageButton button_like = new ImageButton(MainActivity.this);
+                        button_like.setImageResource(R.drawable.icon_like);
+
+                        ImageButton button_pay = new ImageButton(MainActivity.this);
+                        button_pay.setImageResource(R.drawable.icon_pay);
 
                         horScroll.addView(topLinearLayout);
                         scroll_view.addView(horScroll);

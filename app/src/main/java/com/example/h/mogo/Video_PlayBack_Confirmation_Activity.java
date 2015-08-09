@@ -58,6 +58,7 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
             public void onClick(View v) {
                 Log.d("pb", "=======================OnClick======================");
                 uploadVideo(path, grid_index, parseGeoString(geoPoint));
+                overridePendingTransition(R.anim.animation_push_down_in, R.anim.animation_push_down_out);
             }
         });
         ImageButton go_back_button = (ImageButton)findViewById(R.id.playback_button_delete);
@@ -66,6 +67,7 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(Video_PlayBack_Confirmation_Activity.this, MainActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.animation_push_down_in, R.anim.animation_push_down_out);
             }
         });
 
