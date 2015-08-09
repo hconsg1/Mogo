@@ -30,6 +30,7 @@ import java.io.InputStream;
 
 public class Video_PlayBack_Confirmation_Activity extends Activity {
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +41,7 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
         final String grid_index = getIntent().getExtras().getString("gridInfo");
         final String geoPoint = getIntent().getExtras().getString("geoPoint");
         Log.d("pb", "========================" + path + "========================");
+
 
         VideoView videoView = (VideoView)findViewById(R.id.playback_video_view);
         videoView.setVideoPath("file://" + path);
@@ -68,6 +70,8 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
         });
 
     }//end of oncreate function of main activity
+
+
     public ParseGeoPoint parseGeoString(String geoString){
         String[] latlong = geoString.split("///");
         return new ParseGeoPoint(Double.parseDouble(latlong[0]),Double.parseDouble(latlong[1]));
