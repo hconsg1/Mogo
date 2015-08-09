@@ -54,18 +54,20 @@ public class CameraPreview  extends SurfaceView implements SurfaceHolder.Callbac
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final int width = resolveSize(getSuggestedMinimumWidth(), widthMeasureSpec);
         final int height = resolveSize(getSuggestedMinimumHeight(), heightMeasureSpec);
-
+        System.out.println("\n\n\n======================= HAVE A LOOK =======================\n\n\n");
+        System.out.println(" height is : " + height + "  / width is : " + width + " !!!!!!!!!!!!!!!!!!!!!");
         if (mSupportedPreviewSizes != null) {
             mPreviewSize = getOptimalPreviewSize(mSupportedPreviewSizes, width, height);
         }
 
         float ratio;
-        if(mPreviewSize.height >= mPreviewSize.width)
+        if(mPreviewSize.height <= mPreviewSize.width)
             ratio = (float) mPreviewSize.height / (float) mPreviewSize.width;
         else
             ratio = (float) mPreviewSize.width / (float) mPreviewSize.height;
 
         // One of these methods should be used, second method squishes preview slightly
+        System.out.println("\n\n\n\n================= RATION IS  :  " + ratio +  "   =============\n\n\n\n");
         setMeasuredDimension(width, (int) (width * ratio));
         //setMeasuredDimension((int) (width * ratio), height);
     }
