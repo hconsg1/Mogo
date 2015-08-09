@@ -17,7 +17,7 @@
     <VideoView
         android:id="@+id/playback_video_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="291dp"
         android:background="#4a4a4a"
         />
 
@@ -33,11 +33,11 @@
 
     <RelativeLayout
         android:id="@+id/playback_button_wrapper"
-        android:layout_width="260dp"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="20dp"
         android:layout_gravity="center_horizontal"
         >
 

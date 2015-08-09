@@ -17,7 +17,7 @@
     <FrameLayout
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="291dp"
         android:background="#4a4a4a" />
     <ProgressBar
         android:id="@+id/camera_progressbar"
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="20dp"
         >
         <ImageButton
             android:id="@+id/camera_button_flip"

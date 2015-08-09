@@ -62,7 +62,6 @@
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:clickable="true"
-            android:enabled="true"
             android:background="#fc4e5e"/>
 
         <Button
@@ -104,8 +103,6 @@
             android:layout_height="fill_parent"
             android:background="#0000">
 
-
-
         </LinearLayout>
     </ScrollView>
 
@@ -121,7 +118,7 @@
         android:layout_marginBottom="8dp"
         >
         <ImageButton
-            android:id="@+id/main_activity_start_menu"
+            android:id="@+id/main_activity_start_settings"
             android:layout_width="36dp"
             android:layout_height="24dp"
             android:layout_gravity="center"

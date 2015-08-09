@@ -24,7 +24,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
         android:background="#3B5998"
-        android:text="LogInWithFacebook"
+        android:text="@string/facebook_button_text"
         android:clickable="true"
         android:textColor="#FFFFFF"
         android:textSize="16sp"

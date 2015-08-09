@@ -50,6 +50,7 @@ public class CameraActivity extends Activity {
         mCamera.setDisplayOrientation(90);
         Camera.Parameters camera_parameter = mCamera.getParameters();
 
+
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
@@ -57,7 +58,7 @@ public class CameraActivity extends Activity {
 
         // Add a listener to the Capture button
         capture_button = (ImageButton) findViewById(R.id.camera_button_capture);
-        capture_button.setBackgroundResource(R.drawable.icon_start_camera);
+        capture_button.setBackgroundResource(R.drawable.icon_camera_start);
         capture_button.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -66,7 +67,7 @@ public class CameraActivity extends Activity {
                         //need to store the video in internal storage and push the file path to the video playback activity
                         if (isRecording) {
                             // icon style
-                            v.setBackgroundResource(R.drawable.icon_start_camera);
+                            v.setBackgroundResource(R.drawable.icon_camera_start);
 
                             // stop recording and release camera
                             mMediaRecorder.stop();  // stop the recording
@@ -107,7 +108,7 @@ public class CameraActivity extends Activity {
                         }
                     }
                 }
-        ); // end of set onclick listener for CAPTUURE START VIDEO BUTTON
+        ); // end of set onclick listener for CAPTURE START VIDEO BUTTON
 
         ImageButton close_button= (ImageButton) findViewById(R.id.camera_button_close);
         close_button.setOnClickListener(
@@ -124,9 +125,10 @@ public class CameraActivity extends Activity {
 
                         Intent intent = new Intent(CameraActivity.this, MainActivity.class);
                         startActivity(intent);
+                        overridePendingTransition(R.anim.animation_push_down_in, R.anim.animation_push_down_out);
                     }
                 }
-        ); // end of set onclick listener for CAPTUURE START VIDEO BUTTON
+        ); // end of set onclick listener for CAPTURE START VIDEO BUTTON
 
         mCamera.setFaceDetectionListener(new Camera_Face_Detection_Listener());
 
