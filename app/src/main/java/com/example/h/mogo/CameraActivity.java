@@ -47,7 +47,7 @@ public class CameraActivity extends Activity {
 
         // Create an instance of Camera
         mCamera = getCameraInstance();
-        mCamera.setDisplayOrientation(90);
+
 
 
         // Create our Preview view and set it as the content of our activity.
