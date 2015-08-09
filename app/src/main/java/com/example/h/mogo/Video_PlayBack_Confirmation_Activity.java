@@ -136,7 +136,9 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
             file.saveInBackground();
 
             ParseObject obj = new ParseObject("VideoUploadX");
-
+/*
+            geoPoint = new ParseGeoPoint(40.6892,-74.0444);
+            grid_index = long_lat_info_to_grid_info(40.6892,-74.0444);*/
             obj.put("firstUpload", file);
             obj.put("grid_index", grid_index);
             obj.put("geoPoint", geoPoint);
@@ -181,7 +183,15 @@ public class Video_PlayBack_Confirmation_Activity extends Activity {
             System.out.print("======error in file upload function in main activity ===============");
         }
     }
-
+    public String long_lat_info_to_grid_info(double latitude , double longitude){
+        String grid_index;
+        //TODO: THIS IS THE MOST IMPORTANT ALGORITHM PART WHERE WE TRANSLATE LONG/ LAT INFO TO GRID LOCATION IN DB
+        //HARD CODED FOR NOW
+        int x_grid = (int)(longitude* 1000);
+        int y_grid = (int)(latitude* 1000);
+        grid_index  = Integer.toString(x_grid) + '_' + Integer.toString(y_grid);
+        return grid_index;
+    }
     public static byte[] getBytesFromFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);
 

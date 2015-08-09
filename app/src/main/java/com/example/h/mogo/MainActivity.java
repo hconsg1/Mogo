@@ -1,6 +1,5 @@
 package com.example.h.mogo;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,12 +22,6 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.view.ViewGroup;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.MotionEvent;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -41,7 +34,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -52,6 +44,7 @@ import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -130,26 +123,13 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
 
-        //uploadVideo();
-        //startCamera();
-
-
-        //Button   Notification
-//        ImageButton notibutton = (ImageButton) findViewById(R.id.main_activity_start_notification);
-//        button.setOnClickListener(new View.OnClickListener(){
-//            public void onClick(View view) {
-//                Intent open_notification_intent = new Intent(MainActivity.this, NotificationActivity.class);
-//                MainActivity.this.startActivity(open_notification_intent);
-//                overridePendingTransition(R.anim.animation_open_camera, R.anim.animation_close_camera);
-//            }
-//        });
-
 
         //Button  Open Notification
         ImageButton notibutton = (ImageButton) findViewById(R.id.main_activity_start_notification);
         notibutton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
                 Intent open_notification_intent = new Intent(MainActivity.this, NotificationActivity.class);
+                open_notification_intent.putExtra("grid_info", current_grid_location);
                 startActivity(open_notification_intent);
                 overridePendingTransition(R.anim.animation_push_left_in, R.anim.animation_push_left_out);
             }
@@ -288,13 +268,14 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
                     for (ParseObject object : list) {
                         url = getVideoUrl(object);
                         Log.d("main", getVideoUrl(object));
-                        String json = object.getString("Profile");
-                        JSONObject obj = null;
-                        try {
-                            obj = (JSONObject)(new JSONParser().parse(json));
-                        } catch (org.json.simple.parser.ParseException e1) {
-                            e1.printStackTrace();
-                        }
+                        ParseUser user = ParseUser.getCurrentUser();
+                        String json = user.getString("Profile");
+//                        JSONObject obj = null;
+//                        try {
+//                            obj = (JSONObject)(new JSONParser().parse(json));
+//                        } catch (org.json.simple.parser.ParseException e1) {
+//                            e1.printStackTrace();
+//                        }
 
                         LinearLayout scroll_view = (LinearLayout) findViewById(R.id.main_activity_video_scrollView_wrapper);
                         int width = scroll_view.getWidth();
@@ -332,7 +313,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
 
                         RelativeLayout.LayoutParams swipeViewParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
                         swipeView.setLayoutParams(swipeViewParams);
-                        swipeViewParams.setMargins(50,50,50,50);
+                        swipeViewParams.setMargins(50, 50, 50, 50);
 
                         RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
                         RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -354,16 +335,22 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
                         button_like.setBackgroundResource(R.drawable.icon_like);
                         button_like.setId(View.generateViewId());
 
-                        ImageButton button_pay = new ImageButton(MainActivity.this);
+                        final ImageButton button_pay = new ImageButton(MainActivity.this);
                         button_pay.setBackgroundResource(R.drawable.icon_pay);
-                        params2.addRule(RelativeLayout.BELOW,button_like.getId());
+                        params2.addRule(RelativeLayout.BELOW, button_like.getId());
 
                         swipeView.addView(button_like, params1);
                         swipeView.addView(button_pay, params2);
 
 
 
+                        button_pay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                start_payment_activity("hong_jun_choi@brown.edu", "5", "hackathon" );
 
+                            }
+                        });
                         //TODO: should i do other stuff like focus?
                     }
 
